@@ -96,7 +96,7 @@
             this.Controls.Add(this.buttonAdd);
             this.Controls.Add(this.dataGridView);
             this.Name = "WorksForm";
-            this.Text = "WorksForm";
+            this.Text = "Услуги";
             this.Load += new System.EventHandler(this.WorksForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);

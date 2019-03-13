@@ -96,7 +96,7 @@
             this.Controls.Add(this.buttonMaterialEdit);
             this.Controls.Add(this.buttonMaterialAdd);
             this.Name = "MaterialsForm";
-            this.Text = "MaterialsForm";
+            this.Text = "Материалы";
             this.Load += new System.EventHandler(this.MaterialsForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);

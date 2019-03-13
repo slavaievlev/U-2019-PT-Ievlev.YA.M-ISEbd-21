@@ -158,7 +158,7 @@
             this.Controls.Add(this.menuStripMain);
             this.MainMenuStrip = this.menuStripMain;
             this.Name = "MainForm";
-            this.Text = "MainForm";
+            this.Text = "Заказы";
             this.menuStripMain.ResumeLayout(false);
             this.menuStripMain.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();

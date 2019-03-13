@@ -83,7 +83,7 @@
             this.Controls.Add(this.buttonSave);
             this.Controls.Add(this.textBoxFIOInput);
             this.Name = "CustomerEditForm";
-            this.Text = "CustomerForm";
+            this.Text = "Редактирование пользователя";
             this.Load += new System.EventHandler(this.CustomerForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
