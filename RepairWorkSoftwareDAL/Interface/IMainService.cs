@@ -19,5 +19,7 @@ namespace RepairWorkSoftwareDAL.Interface
         void FinishOrder(OrderBindingModel model);
 
         void PayOrder(OrderBindingModel model);
+
+        void PutMaterialOnStock(StockMaterialBindingModel model);
     }
 }

@@ -21,15 +21,7 @@ namespace RepairWorkSoftwareServiceImplementList
 
         public void CreateOrder(OrderBindingModel model)
         {
-            int maxId = 0;
-            for (int i = 0; i < source.Orders.Count; i++)
-            {
-                if (source.Orders[i].Id > maxId)
-                {
-                    maxId = source.Orders[i].Id;
-                }
-            }
-
+            int maxId = source.Orders.Count > 0 ? source.Orders.Max(rec => rec.Id) : 0;
             source.Orders.Add(new Order
             {
                 Id = maxId + 1,
@@ -40,122 +32,132 @@ namespace RepairWorkSoftwareServiceImplementList
                 Sum = model.Sum,
                 Status = OrderStatus.Принят
             });
+
         }
 
         public void FinishOrder(OrderBindingModel model)
         {
-            int index = -1;
-            for (int i = 0; i < source.Orders.Count; i++) {
-                if (source.Orders[i].Id == model.Id)
-                {
-                    index = i;
-                    break;
-                }
-            }
-
-            if (index == -1)
+            Order element = source.Orders.FirstOrDefault(rec => rec.Id == model.Id);
+            if (element == null)
             {
                 throw new Exception("Элемент не найден");
             }
-
-            if (source.Orders[index].Status != OrderStatus.Выполняется)
+            if (element.Status != OrderStatus.Выполняется)
             {
                 throw new Exception("Заказ не в статусе \"Выполняется\"");
             }
-
-            source.Orders[index].Status = OrderStatus.Готов;
+            element.Status = OrderStatus.Готов;
         }
 
         public List<OrderViewModel> GetList()
         {
-            List<OrderViewModel> result = new List<OrderViewModel>();
-            for (int i = 0; i < source.Orders.Count; i++)
-            {
-                string customerFIO = string.Empty;
-                for (int j = 0; j < source.Customers.Count; j++)
+            List<OrderViewModel> result = source.Orders
+                .Select(rec => new OrderViewModel
                 {
-                    if (source.Customers[j].Id == source.Orders[i].CustomerId)
-                    {
-                        customerFIO = source.Customers[j].CustomerFIO;
-                        break;
-                    }
-                }
-
-                string workName = string.Empty;
-                for (int j = 0; j < source.Works.Count; j++)
-                {
-                    if (source.Works[j].Id == source.Orders[i].WorkId)
-                    {
-                        workName = source.Works[j].WorkName;
-                        break;
-                    }
-                }
-                result.Add(new OrderViewModel
-                {
-                    Id = source.Orders[i].Id,
-                    CustomerId = source.Orders[i].CustomerId,
-                    CustomerFIO = customerFIO,
-                    WorkId = source.Orders[i].WorkId,
-                    WorkName = workName,
-                    Count = source.Orders[i].Count,
-                    Sum = source.Orders[i].Sum,
-                    DateCreate = source.Orders[i].DateCreate.ToLongDateString(),
-                    DateImplement = source.Orders[i].DateImplement?.ToLongDateString(),
-                    Status = source.Orders[i].Status.ToString()
-                });
-            }
+                    Id = rec.Id,
+                    CustomerId = rec.CustomerId,
+                    WorkId = rec.WorkId,
+                    DateCreate = rec.DateCreate.ToLongDateString(),
+                    DateImplement = rec.DateImplement?.ToLongDateString(),
+                    Status = rec.Status.ToString(),
+                    Count = rec.Count,
+                    Sum = rec.Sum,
+                    CustomerFIO = source.Customers.FirstOrDefault(recC => recC.Id ==
+                    rec.CustomerId)?.CustomerFIO,
+                    WorkName = source.Works.FirstOrDefault(recP => recP.Id ==
+                rec.WorkId)?.WorkName,
+                })
+                .ToList();
             return result;
         }
 
         public void PayOrder(OrderBindingModel model)
         {
-            int index = -1;
-            for (int i = 0; i < source.Orders.Count; i++)
-            {
-                if (source.Orders[i].Id == model.Id)
-                {
-                    index = i;
-                    break;
-                }
-            }
-
-            if (index == -1)
+            Order element = source.Orders.FirstOrDefault(rec => rec.Id == model.Id);
+            if (element == null)
             {
                 throw new Exception("Элемент не найден");
             }
-
-            if (source.Orders[index].Status != OrderStatus.Готов)
+            if (element.Status != OrderStatus.Готов)
             {
                 throw new Exception("Заказ не в статусе \"Готов\"");
             }
-
-            source.Orders[index].Status = OrderStatus.Оплачен;
+            element.Status = OrderStatus.Оплачен;
         }
 
         public void TakeOrderInWork(OrderBindingModel model)
         {
-            int index = -1;
-            for (int i = 0; i < source.Orders.Count; i++)
-            {
-                if (source.Orders[i].Id == model.Id)
-                {
-                    index = i;
-                    break;
-                }
-            }
-
-            if (index == -1)
+            Order element = source.Orders.FirstOrDefault(rec => rec.Id == model.Id);
+            if (element == null)
             {
                 throw new Exception("Элемент не найден");
             }
-
-            if (source.Orders[index].Status != OrderStatus.Принят)
+            if (element.Status != OrderStatus.Принят)
             {
                 throw new Exception("Заказ не в статусе \"Принят\"");
             }
+            
+            var workMaterials = source.WorkMaterials.Where(rec => rec.WorkId
+                == element.WorkId);
+            foreach (var productComponent in workMaterials)
+            {
+                int countOnStocks = source.StockMaterials
+                    .Where(rec => rec.MaterialId ==
+                productComponent.MaterialId)
+                    .Sum(rec => rec.Count);
+                if (countOnStocks < productComponent.Count * element.Count)
+                {
+                    var componentName = source.Materials.FirstOrDefault(rec => rec.Id ==
+                        productComponent.MaterialId);
+                    throw new Exception("Не достаточно компонента " +
+                        componentName?.MaterialName + " требуется " + (productComponent.Count * element.Count) +
+                        ", в наличии " + countOnStocks);
+                }
+            }
 
-            source.Orders[index].DateImplement = DateTime.Now;
-            source.Orders[index].Status = OrderStatus.Выполняется;
+            foreach (var productComponent in workMaterials)
+            {
+                int countOnStocks = productComponent.Count * element.Count;
+                var stockMaterials = source.StockMaterials.Where(rec => rec.MaterialId
+                    == productComponent.MaterialId);
+                foreach (var stockComponent in stockMaterials)
+                {
+                    if (stockComponent.Count >= countOnStocks)
+                    {
+                        stockComponent.Count -= countOnStocks;
+                        break;
+                    }
+                    else
+                    {
+                        countOnStocks -= stockComponent.Count;
+                        stockComponent.Count = 0;
+                    }
+                }
+            }
+            element.DateImplement = DateTime.Now;
+            element.Status = OrderStatus.Выполняется;
+        }
+
+        public void PutMaterialOnStock(StockMaterialBindingModel model)
+        {
+            StockMaterial element = source.StockMaterials.FirstOrDefault(rec =>
+                rec.StockId == model.StockId && rec.MaterialId == model.MaterialId);
+            if (element != null)
+            {
+                element.Count += model.Count;
+            }
+            else
+            {
+                int maxId = source.StockMaterials.Count > 0 ?
+                    source.StockMaterials.Max(rec => rec.Id) : 0;
+                source.StockMaterials.Add(new StockMaterial
+                {
+                    Id = ++maxId,
+                    StockId = model.StockId,
+                    MaterialId = model.MaterialId,
+                    Count = model.Count
+                });
+            }
         }
     }
 }

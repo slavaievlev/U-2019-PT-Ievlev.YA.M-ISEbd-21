@@ -21,20 +21,12 @@ namespace RepairWorkSoftwareServiceImplementList
 
         public void AddElement(WorkBindingModel model)
         {
-            int maxId = 0;
-            for (int i = 0; i < source.Works.Count; i++)
+            Work element = source.Works.FirstOrDefault(rec => rec.WorkName == model.WorkName);
+            if (element != null)
             {
-                if (source.Works[i].Id > maxId)
-                {
-                    maxId = source.Works[i].Id;
-                }
-
-                if (source.Works[i].WorkName.Equals(model.WorkName))
-                {
-                    throw new Exception("Уже есть услуга с таким названием");
-                }
+                throw new Exception("Уже есть услуга с таким названием");
             }
-
+            int maxId = source.Works.Count > 0 ? source.Works.Max(rec => rec.Id) : 0;
             source.Works.Add(new Work
             {
                 Id = maxId + 1,
@@ -42,93 +34,87 @@ namespace RepairWorkSoftwareServiceImplementList
                 Price = model.Price
             });
 
-            int maxMWId = 0;
-            for (int i = 0; i < source.WorkMaterials.Count; i++)
-            {
-                if (source.WorkMaterials[i].Id > maxMWId)
-                {
-                    maxMWId = source.WorkMaterials[i].Id;
-                }
-            }
+            int maxPCId = source.WorkMaterials.Count > 0 ? source.WorkMaterials.Max(rec => rec.Id) : 0;
 
-            for (int i = 0; i < model.WorkMaterials.Count; i++)
+            var groupComponents = model.WorkMaterials
+            .GroupBy(rec => rec.MaterialId)
+            .Select(rec => new
             {
-                for (int j = i + 1; j < model.WorkMaterials.Count; j++)
-                {
-                    if (model.WorkMaterials[i].MaterialId == model.WorkMaterials[j].MaterialId)
-                    {
-                        model.WorkMaterials[i].Count += model.WorkMaterials[j].Count;
-                        model.WorkMaterials.RemoveAt(j--);
-                    }
-                }
-            }
+                ComponentId = rec.Key,
+                Count = rec.Sum(r => r.Count)
+            });
 
-            for (int i = 0; i < model.WorkMaterials.Count; i++)
+            foreach (var groupComponent in groupComponents)
             {
                 source.WorkMaterials.Add(new MaterialWork
                 {
-                    Id = ++maxMWId,
+                    Id = ++maxPCId,
                     WorkId = maxId + 1,
-                    MaterialId = model.WorkMaterials[i].MaterialId,
-                    Count = model.WorkMaterials[i].Count
+                    MaterialId = groupComponent.ComponentId,
+                    Count = groupComponent.Count
                 });
             }
         }
 
         public void DelElement(int id)
         {
-            for (int i = 0; i < source.WorkMaterials.Count; i++)
+            Work element = source.Works.FirstOrDefault(rec => rec.Id == id);
+            if (element != null)
             {
-                if (source.WorkMaterials[i].WorkId == id)
-                {
-                    source.WorkMaterials.RemoveAt(i--);
-                }
+                source.WorkMaterials.RemoveAll(rec => rec.WorkId == id);
+                source.Works.Remove(element);
             }
-
-            for (int i = 0; i < source.Works.Count; i++)
+            else
             {
-                if (source.Works[i].Id == id)
-                {
-                    source.Works.RemoveAt(i);
-                    return;
-                }
+                throw new Exception("Элемент не найден");
             }
-
-            throw new Exception("Элемент не найден");
         }
 
         public WorkViewModel GetElement(int id)
         {
-            for (int i = 0; i < source.Works.Count; i++)
+            Work element = source.Works.FirstOrDefault(rec => rec.Id == id);
+            if (element != null)
             {
-                if (source.Works[i].Id == id)
+                return new WorkViewModel
                 {
-                    return new WorkViewModel
-                    {
-                        Id = source.Works[i].Id,
-                        WorkName = source.Works[i].WorkName,
-                        Price = source.Works[i].Price,
-                        WorkMaterials = GetWorkMaterials(i)
-                    };
-                }
+                    Id = element.Id,
+                    WorkName = element.WorkName,
+                    Price = element.Price,
+                    WorkMaterials = source.WorkMaterials
+                .Where(recPC => recPC.WorkId == element.Id)
+                .Select(recPC => new MaterialWorkViewModel
+                {
+                    Id = recPC.Id,
+                    WorkId = recPC.WorkId,
+                    MaterialId = recPC.MaterialId,
+                    MaterialName = source.Materials.FirstOrDefault(recC =>
+                        recC.Id == recPC.MaterialId)?.MaterialName,
+                    Count = recPC.Count
+                })
+               .ToList()
+                };
             }
-
-            throw new Exception("Элемент не найден");
+            throw new Exception("Элемент не найден");
         }
 
         public List<WorkViewModel> GetList()
         {
-            List<WorkViewModel> result = new List<WorkViewModel>();
-            for (int i = 0; i < source.Works.Count; i++)
+            List<WorkViewModel> result = source.Works.Select(rec => new WorkViewModel
             {
-                result.Add(new WorkViewModel
-                {
-                    Id = source.Works[i].Id,
-                    WorkName = source.Works[i].WorkName,
-                    Price = source.Works[i].Price,
-                    WorkMaterials = GetWorkMaterials(i)
-                });
-            }
+                Id = rec.Id,
+                WorkName = rec.WorkName,
+                Price = rec.Price,
+                WorkMaterials = source.WorkMaterials
+                    .Where(recWM => recWM.WorkId == rec.Id)
+                    .Select(recWM => new MaterialWorkViewModel
+                    {
+                        Id = recWM.Id,
+                        WorkId = recWM.WorkId,
+                        MaterialId = recWM.MaterialId,
+                        MaterialName = source.Materials.FirstOrDefault(recM => recM.Id == recWM.MaterialId)?.MaterialName,
+                        Count = recWM.Count
+                    }).ToList()
+            }).ToList();
             return result;
         }
 
@@ -163,85 +149,58 @@ namespace RepairWorkSoftwareServiceImplementList
 
         public void UpdElement(WorkBindingModel model)
         {
-            int index = -1;
-            for (int i = 0; i < source.Works.Count; i++)
+            Work element = source.Works.FirstOrDefault(rec => rec.WorkName ==
+                model.WorkName && rec.Id != model.Id);
+            if (element != null)
             {
-                if (source.Works[i].Id == model.Id)
-                {
-                    index = i;
-                }
-
-                if (source.Works[i].WorkName == model.WorkName &&
-                    source.Works[i].Id != model.Id)
-                {
-                    throw new Exception("Уже есть услуга с таким названием");
-                }
+                throw new Exception("Уже есть изделие с таким названием");
             }
-
-            if (index == -1)
+            element = source.Works.FirstOrDefault(rec => rec.Id == model.Id);
+            if (element == null)
             {
                 throw new Exception("Элемент не найден");
             }
+            element.WorkName = model.WorkName;
+            element.Price = model.Price;
+            int maxPCId = source.WorkMaterials.Count > 0 ?
+                source.WorkMaterials.Max(rec => rec.Id) : 0;
 
-            source.Works[index].WorkName = model.WorkName;
-            source.Works[index].Price = model.Price;
-
-            int maxWMId = 0;
-            for (int i = 0; i < source.WorkMaterials.Count; i++)
+            var compIds = model.WorkMaterials.Select(rec =>
+                rec.MaterialId).Distinct();
+            var updateComponents = source.WorkMaterials.Where(rec => rec.WorkId ==
+                model.Id && compIds.Contains(rec.MaterialId));
+            foreach (var updateComponent in updateComponents)
             {
-                if (source.WorkMaterials[i].Id > maxWMId)
-                {
-                    maxWMId = source.WorkMaterials[i].Id;
-                }
+                updateComponent.Count = model.WorkMaterials.FirstOrDefault(rec =>
+               rec.Id == updateComponent.Id).Count;
             }
+            source.WorkMaterials.RemoveAll(rec => rec.WorkId == model.Id && !compIds.Contains(rec.MaterialId));
 
-            for (int i = 0; i < source.WorkMaterials.Count; i++)
+            var groupComponents = model.WorkMaterials
+            .Where(rec => rec.Id == 0)
+            .GroupBy(rec => rec.MaterialId)
+            .Select(rec => new
             {
-                if (source.WorkMaterials[i].WorkId == model.Id)
+                MaterialId = rec.Key,
+                Count = rec.Sum(r => r.Count)
+            });
+            foreach (var groupComponent in groupComponents)
+            {
+                MaterialWork elementPC = source.WorkMaterials.FirstOrDefault(rec => 
+                    rec.WorkId == model.Id && rec.MaterialId == groupComponent.MaterialId);
+                if (elementPC != null)
                 {
-                    bool flag = true;
-                    for (int j = 0; j < model.WorkMaterials.Count; j++)
-                    {
-                        if (source.WorkMaterials[i].Id == model.WorkMaterials[j].Id)
-                        {
-                            source.WorkMaterials[i].Count = model.WorkMaterials[j].Count;
-                            flag = false;
-                            break;
-                        }
-                    }
-
-                    if (flag)
-                    {
-                        source.WorkMaterials.RemoveAt(i--);
-                    }
+                    elementPC.Count += groupComponent.Count;
                 }
-            }
-
-            for (int i = 0; i < model.WorkMaterials.Count; i++)
-            {
-                if (model.WorkMaterials[i].Id == 0)
+                else
                 {
-                    for (int j = 0; j < source.WorkMaterials.Count; j++)
+                    source.WorkMaterials.Add(new MaterialWork
                     {
-                        if (source.WorkMaterials[j].WorkId == model.Id &&
-                            source.WorkMaterials[j].MaterialId == model.WorkMaterials[i].MaterialId)
-                        {
-                            source.WorkMaterials[j].Count += model.WorkMaterials[i].Count;
-                            model.WorkMaterials[i].Id = source.WorkMaterials[j].Id;
-                            break;
-                        }
-                    }
-
-                    if (model.WorkMaterials[i].Id == 0)
-                    {
-                        source.WorkMaterials.Add(new MaterialWork
-                        {
-                            Id = ++maxWMId,
-                            WorkId = model.Id,
-                            MaterialId = model.WorkMaterials[i].MaterialId,
-                            Count = model.WorkMaterials[i].Count
-                        });
-                    }
+                        Id = ++maxPCId,
+                        WorkId = model.Id,
+                        MaterialId = groupComponent.MaterialId,
+                        Count = groupComponent.Count
+                    });
                 }
             }
         }
