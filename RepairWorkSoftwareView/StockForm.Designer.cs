@@ -105,7 +105,7 @@
             this.Controls.Add(this.textBoxName);
             this.Controls.Add(this.textBoxNameInscription);
             this.Name = "StockForm";
-            this.Text = "FormStock";
+            this.Text = "Редактирование склада";
             this.Load += new System.EventHandler(this.StockForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);

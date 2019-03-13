@@ -107,7 +107,7 @@
             this.Controls.Add(this.buttonSave);
             this.Controls.Add(this.textBoxCountInput);
             this.Name = "WorkMaterialAddForm";
-            this.Text = "MaterialAddForm";
+            this.Text = "Редактирование материала";
             this.Load += new System.EventHandler(this.WorkMaterialAddForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

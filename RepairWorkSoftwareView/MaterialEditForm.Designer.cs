@@ -83,7 +83,7 @@
             this.Controls.Add(this.buttonSave);
             this.Controls.Add(this.textBoxNameInput);
             this.Name = "MaterialEditForm";
-            this.Text = "MaterialEditForm";
+            this.Text = "Редактирование материала";
             this.Load += new System.EventHandler(this.MaterialEditForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

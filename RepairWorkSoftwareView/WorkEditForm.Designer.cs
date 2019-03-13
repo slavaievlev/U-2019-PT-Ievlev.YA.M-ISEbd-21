@@ -33,11 +33,11 @@
             this.textBoxPriceInput = new System.Windows.Forms.TextBox();
             this.textBoxPriceInscription = new System.Windows.Forms.TextBox();
             this.groupBoxMaterials = new System.Windows.Forms.GroupBox();
-            this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.buttonAdd = new System.Windows.Forms.Button();
-            this.buttonEdit = new System.Windows.Forms.Button();
-            this.buttonDelete = new System.Windows.Forms.Button();
             this.buttonUpdate = new System.Windows.Forms.Button();
+            this.buttonDelete = new System.Windows.Forms.Button();
+            this.buttonEdit = new System.Windows.Forms.Button();
+            this.buttonAdd = new System.Windows.Forms.Button();
+            this.dataGridView = new System.Windows.Forms.DataGridView();
             this.buttonSave = new System.Windows.Forms.Button();
             this.buttonBack = new System.Windows.Forms.Button();
             this.groupBoxMaterials.SuspendLayout();
@@ -96,34 +96,15 @@
             this.groupBoxMaterials.TabStop = false;
             this.groupBoxMaterials.Text = "Материалы";
             // 
-            // dataGridView
+            // buttonUpdate
             // 
-            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView.Location = new System.Drawing.Point(6, 21);
-            this.dataGridView.Name = "dataGridView";
-            this.dataGridView.RowTemplate.Height = 24;
-            this.dataGridView.Size = new System.Drawing.Size(523, 242);
-            this.dataGridView.TabIndex = 0;
-            // 
-            // buttonAdd
-            // 
-            this.buttonAdd.Location = new System.Drawing.Point(581, 35);
-            this.buttonAdd.Name = "buttonAdd";
-            this.buttonAdd.Size = new System.Drawing.Size(126, 42);
-            this.buttonAdd.TabIndex = 1;
-            this.buttonAdd.Text = "Добавить";
-            this.buttonAdd.UseVisualStyleBackColor = true;
-            this.buttonAdd.Click += new System.EventHandler(this.ButtonAdd_Click);
-            // 
-            // buttonEdit
-            // 
-            this.buttonEdit.Location = new System.Drawing.Point(581, 83);
-            this.buttonEdit.Name = "buttonEdit";
-            this.buttonEdit.Size = new System.Drawing.Size(126, 42);
-            this.buttonEdit.TabIndex = 2;
-            this.buttonEdit.Text = "Изменить";
-            this.buttonEdit.UseVisualStyleBackColor = true;
-            this.buttonEdit.Click += new System.EventHandler(this.ButtonEdit_Click);
+            this.buttonUpdate.Location = new System.Drawing.Point(581, 179);
+            this.buttonUpdate.Name = "buttonUpdate";
+            this.buttonUpdate.Size = new System.Drawing.Size(126, 42);
+            this.buttonUpdate.TabIndex = 4;
+            this.buttonUpdate.Text = "Обновить";
+            this.buttonUpdate.UseVisualStyleBackColor = true;
+            this.buttonUpdate.Click += new System.EventHandler(this.ButtonUpdate_Click);
             // 
             // buttonDelete
             // 
@@ -135,15 +116,34 @@
             this.buttonDelete.UseVisualStyleBackColor = true;
             this.buttonDelete.Click += new System.EventHandler(this.ButtonDelete_Click);
             // 
-            // buttonUpdate
+            // buttonEdit
             // 
-            this.buttonUpdate.Location = new System.Drawing.Point(581, 179);
-            this.buttonUpdate.Name = "buttonUpdate";
-            this.buttonUpdate.Size = new System.Drawing.Size(126, 42);
-            this.buttonUpdate.TabIndex = 4;
-            this.buttonUpdate.Text = "Обновить";
-            this.buttonUpdate.UseVisualStyleBackColor = true;
-            this.buttonUpdate.Click += new System.EventHandler(this.ButtonUpdate_Click);
+            this.buttonEdit.Location = new System.Drawing.Point(581, 83);
+            this.buttonEdit.Name = "buttonEdit";
+            this.buttonEdit.Size = new System.Drawing.Size(126, 42);
+            this.buttonEdit.TabIndex = 2;
+            this.buttonEdit.Text = "Изменить";
+            this.buttonEdit.UseVisualStyleBackColor = true;
+            this.buttonEdit.Click += new System.EventHandler(this.ButtonEdit_Click);
+            // 
+            // buttonAdd
+            // 
+            this.buttonAdd.Location = new System.Drawing.Point(581, 35);
+            this.buttonAdd.Name = "buttonAdd";
+            this.buttonAdd.Size = new System.Drawing.Size(126, 42);
+            this.buttonAdd.TabIndex = 1;
+            this.buttonAdd.Text = "Добавить";
+            this.buttonAdd.UseVisualStyleBackColor = true;
+            this.buttonAdd.Click += new System.EventHandler(this.ButtonAdd_Click);
+            // 
+            // dataGridView
+            // 
+            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView.Location = new System.Drawing.Point(6, 21);
+            this.dataGridView.Name = "dataGridView";
+            this.dataGridView.RowTemplate.Height = 24;
+            this.dataGridView.Size = new System.Drawing.Size(523, 242);
+            this.dataGridView.TabIndex = 0;
             // 
             // buttonSave
             // 
@@ -178,7 +178,7 @@
             this.Controls.Add(this.textBoxNameInput);
             this.Controls.Add(this.textBoxNameInscription);
             this.Name = "WorkEditForm";
-            this.Text = "WorkForm";
+            this.Text = "Редактирование услуги";
             this.Load += new System.EventHandler(this.WorkEditForm_Load);
             this.groupBoxMaterials.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();

@@ -125,7 +125,7 @@
             this.Controls.Add(this.comboBoxStock);
             this.Controls.Add(this.textBoxStockInscription);
             this.Name = "PutOnStockForm";
-            this.Text = "PutOnStockForm";
+            this.Text = "Добавление материалов на склад";
             this.Load += new System.EventHandler(this.FormPutOnStock_Load);
             this.Click += new System.EventHandler(this.FormPutOnStock_Load);
             this.ResumeLayout(false);
