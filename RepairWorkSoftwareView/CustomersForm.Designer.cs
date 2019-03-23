@@ -103,7 +103,7 @@
             this.Controls.Add(this.buttonCustomerAdd);
             this.Controls.Add(this.dataGridView);
             this.Name = "CustomersForm";
-            this.Text = "Пользователи";
+            this.Text = "Клиенты";
             this.Load += new System.EventHandler(this.CustomersForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.customerServiceListBindingSource)).EndInit();

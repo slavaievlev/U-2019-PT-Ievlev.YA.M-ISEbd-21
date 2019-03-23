@@ -21,6 +21,10 @@ namespace RepairWorkSoftwareServiceImplementList
 
         public List<MaterialWork> WorkMaterials { get; set; }
 
+        public List<Stock> Stocks { get; set; }
+
+        public List<StockMaterial> StockMaterials { get; set; }
+
         private DataListSingleton()
         {
             Customers = new List<Customer>();
@@ -28,6 +32,8 @@ namespace RepairWorkSoftwareServiceImplementList
             Orders = new List<Order>();
             Works = new List<Work>();
             WorkMaterials = new List<MaterialWork>();
+            Stocks = new List<Stock>();
+            StockMaterials = new List<StockMaterial>();
         }
 
         public static DataListSingleton GetInstance()

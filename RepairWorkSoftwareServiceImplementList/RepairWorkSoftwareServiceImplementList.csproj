@@ -46,6 +46,7 @@
     <Compile Include="MainServiceList.cs" />
     <Compile Include="MaterialServiceList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="StockServiceList.cs" />
     <Compile Include="WorkServiceList.cs" />
   </ItemGroup>
   <ItemGroup>
