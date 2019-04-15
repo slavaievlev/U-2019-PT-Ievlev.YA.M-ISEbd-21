@@ -208,6 +208,10 @@
       <Project>{de977e0d-7755-4fa3-be06-65b9d5dc4a90}</Project>
       <Name>RepairWorkSoftwareServiceImplementList</Name>
     </ProjectReference>
+    <ProjectReference Include="..\ServiceImplementsDatabase\ServiceImplementsDatabase.csproj">
+      <Project>{dc5cb7ae-5db5-43d7-ad1d-94da90a5180c}</Project>
+      <Name>ServiceImplementsDatabase</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

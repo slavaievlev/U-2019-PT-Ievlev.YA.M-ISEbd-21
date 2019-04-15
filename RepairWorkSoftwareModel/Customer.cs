@@ -12,7 +12,6 @@ namespace RepairWorkSoftwareModel
     {
         public int Id { get; set; }
 
-        [Required]
         public string CustomerFIO { get; set; }
 
         [ForeignKey("CustomerId")]

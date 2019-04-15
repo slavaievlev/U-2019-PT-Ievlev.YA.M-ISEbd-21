@@ -14,6 +14,6 @@ namespace RepairWorkSoftwareDAL.BindingModel
 
         public decimal Price { get; set; }
 
-        public List<MaterialWorkBindingModel> WorkMaterials { get; set; }
+        public List<WorkMaterialBindingModel> WorkMaterials { get; set; }
     }
 }

@@ -17,6 +17,6 @@ namespace RepairWorkSoftwareDAL.ViewModel
         [DisplayName("Цена")]
         public decimal Price { get; set; }
 
-        public List<MaterialWorkViewModel> WorkMaterials { get; set; }
+        public List<WorkMaterialViewModel> WorkMaterials { get; set; }
     }
 }

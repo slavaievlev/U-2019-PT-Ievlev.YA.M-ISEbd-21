@@ -1,7 +1,10 @@
 ﻿using RepairWorkSoftwareDAL.Interface;
 using RepairWorkSoftwareServiceImplementList;
+using ServiceImplementsDatabase;
+using ServiceImplementsDatabase.Implementations;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -28,12 +31,13 @@ namespace RepairWorkSoftwareView
         public static IUnityContainer BuildUnityContainer()
         {
             var currentContainer = new UnityContainer();
-            currentContainer.RegisterType<ICustomerService, CustomerServiceList>(new HierarchicalLifetimeManager());
-            currentContainer.RegisterType<IMaterialService, MaterialServiceList>(new HierarchicalLifetimeManager());
-            currentContainer.RegisterType<IWorkService, WorkServiceList>(new HierarchicalLifetimeManager());
-            currentContainer.RegisterType<IMainService, MainServiceList>(new HierarchicalLifetimeManager());
+            currentContainer.RegisterType<ICustomerService, CustomerServiceDB>(new HierarchicalLifetimeManager());
+            currentContainer.RegisterType<IMaterialService, MaterialServiceDB>(new HierarchicalLifetimeManager());
+            currentContainer.RegisterType<IWorkService, WorkServiceDB>(new HierarchicalLifetimeManager());
+            currentContainer.RegisterType<IMainService, MainServiceDB>(new HierarchicalLifetimeManager());
+            currentContainer.RegisterType<IStockService, StockServiceDB>(new HierarchicalLifetimeManager());
 
-            currentContainer.RegisterType<IStockService, StockServiceList>(new HierarchicalLifetimeManager());
+            currentContainer.RegisterType<DbContext, AbstractDbContext>(new HierarchicalLifetimeManager());
 
             return currentContainer;
         }

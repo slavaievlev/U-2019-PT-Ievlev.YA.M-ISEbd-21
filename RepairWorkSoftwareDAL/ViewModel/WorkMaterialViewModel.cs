@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RepairWorkSoftwareDAL.ViewModel
 {
-    public class MaterialWorkViewModel
+    public class WorkMaterialViewModel
     {
         public int Id { get; set; }
 

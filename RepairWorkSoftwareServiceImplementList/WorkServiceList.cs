@@ -82,7 +82,7 @@ namespace RepairWorkSoftwareServiceImplementList
                     Price = element.Price,
                     WorkMaterials = source.WorkMaterials
                 .Where(recPC => recPC.WorkId == element.Id)
-                .Select(recPC => new MaterialWorkViewModel
+                .Select(recPC => new WorkMaterialViewModel
                 {
                     Id = recPC.Id,
                     WorkId = recPC.WorkId,
@@ -94,7 +94,8 @@ namespace RepairWorkSoftwareServiceImplementList
                .ToList()
                 };
             }
-            throw new Exception("Элемент не найден");
+            throw new Exception("Элемент не найден");
+
         }
 
         public List<WorkViewModel> GetList()
@@ -106,7 +107,7 @@ namespace RepairWorkSoftwareServiceImplementList
                 Price = rec.Price,
                 WorkMaterials = source.WorkMaterials
                     .Where(recWM => recWM.WorkId == rec.Id)
-                    .Select(recWM => new MaterialWorkViewModel
+                    .Select(recWM => new WorkMaterialViewModel
                     {
                         Id = recWM.Id,
                         WorkId = recWM.WorkId,
@@ -118,9 +119,9 @@ namespace RepairWorkSoftwareServiceImplementList
             return result;
         }
 
-        private List<MaterialWorkViewModel> GetWorkMaterials(int workIndex)
+        private List<WorkMaterialViewModel> GetWorkMaterials(int workIndex)
         {
-            List<MaterialWorkViewModel> workMaterials = new List<MaterialWorkViewModel>();
+            List<WorkMaterialViewModel> workMaterials = new List<WorkMaterialViewModel>();
             for (int j = 0; j < source.WorkMaterials.Count; j++)
             {
                 if (source.WorkMaterials[j].WorkId == source.Works[workIndex].Id)
@@ -134,7 +135,7 @@ namespace RepairWorkSoftwareServiceImplementList
                             break;
                         }
                     }
-                    workMaterials.Add(new MaterialWorkViewModel
+                    workMaterials.Add(new WorkMaterialViewModel
                     {
                         Id = source.WorkMaterials[j].Id,
                         WorkId = source.WorkMaterials[j].WorkId,
