@@ -22,7 +22,12 @@ namespace RepairWorkSoftwareWeb.Controllers
             return View();
         }
 
-        public ActionResult Orders()
+        public ActionResult Order()
+        {
+            return View();
+        }
+
+        public ActionResult GetAllOrders()
         {
             List<OrderViewModel> orderViewModels = service.GetList();
             orderViewModels.Add(new OrderViewModel

@@ -15,9 +15,17 @@
 <script>
     $(function() {
         $("#refreshOrders_Button").click(function() {
-            $.getJSON("/home/Orders", null, fillList);
+            $.getJSON("/home/GetAllOrders", null, fillList);
     });
 });
+</script>
+
+<script>
+    $(function () {
+        $("#createOrder_Button").click(function () {
+            window.open("/home/Order", "_self")
+        });
+    });
 </script>
 
 <script>
@@ -35,4 +43,5 @@
     }
 </script>
 
+<input type="button" id="createOrder_Button" value="Создать заказ" />
 <input type="button" id="refreshOrders_Button" value="Обновить" />
