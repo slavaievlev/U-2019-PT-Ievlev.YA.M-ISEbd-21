@@ -154,6 +154,8 @@
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\CustomerRestController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\MaterialController.cs" />
+    <Compile Include="Controllers\MaterialRestController.cs" />
     <Compile Include="Controllers\OrderController.cs" />
     <Compile Include="Controllers\OrderRestController.cs" />
     <Compile Include="Global.asax.cs">
@@ -200,6 +202,8 @@
     <Content Include="Views\Order\Index.cshtml" />
     <Content Include="Views\Customer\Index.cshtml" />
     <Content Include="Views\Customer\EditCustomer.cshtml" />
+    <Content Include="Views\Material\EditMaterial.cshtml" />
+    <Content Include="Views\Material\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

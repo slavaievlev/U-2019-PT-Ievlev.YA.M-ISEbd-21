@@ -1,0 +1,40 @@
+﻿@{
+    ViewBag.Title = "Material Page";
+}
+
+<h2>Материалы</h2>
+<table id="material-table" class="table">
+    <thead>
+        <tr><th>Название материала</th></tr>
+    </thead>
+    <tbody id="material-list">
+    </tbody>
+</table>
+
+<script>
+    $(function () {
+        $("#refreshMaterial_Button").click(function () {
+            $.getJSON("/material/GetAllMaterials", null, fillList);
+        });
+    });
+</script>
+
+<script>
+    $(function () {
+        $("#createMaterial_Button").click(function () {
+            window.open("/material/EditMaterial", "_self")
+        });
+    });
+</script>
+
+<script>
+    function fillList(materials) {
+        $("#material-list").text("");
+        $.each(materials, function (i) {
+            $("#material-list").append("<tr><td>" + this.MaterialName + "</td></tr>");
+        });
+    }
+</script>
+
+<input type="button" id="createMaterial_Button" value="Создать" />
+<input type="button" id="refreshMaterial_Button" value="Обновить" />

@@ -7,8 +7,8 @@
     <thead>
         <tr><th>ФИО клиента</th><th>Услуга</th><th>Количество</th><th>Сумма</th><th>Статус</th><th>Дата создания</th><th>Дата выполнения</th></tr>
     </thead>
-    <tbody>
-        <tr id="order-list"></tr>
+    <tbody id="order-list">
+
     </tbody>
 </table>
 
@@ -31,14 +31,16 @@
 <script>
     function fillList(orders) {
         $("#order-list").text("");
-        $.each(orders, function(i) {
-            $("#order-list").append("<td>" + this.CustomerFIO + "</td>");
-            $("#order-list").append("<td>" + this.WorkName + "</td>");
-            $("#order-list").append("<td>" + this.Count + "</td>");
-            $("#order-list").append("<td>" + this.Sum + "</td>");
-            $("#order-list").append("<td>" + this.Status + "</td>");
-            $("#order-list").append("<td>" + this.DateCreate + "</td>");
-            $("#order-list").append("<td>" + this.DateImplement + "</td>");
+        $.each(orders, function (i) {
+            $("#order-list").append(
+                "<tr><td>" + this.CustomerFIO + "</td>" + 
+                "<td>" + this.WorkName + "</td>" +
+                "<td>" + this.Count + "</td>" + 
+                "<td>" + this.Sum + "</td>" +
+                "<td>" + this.Status + "</td>" +
+                "<td>" + this.DateCreate + "</td>" +
+                "<td>" + this.DateImplement + "</td></tr>"
+            );
         });
     }
 </script>
