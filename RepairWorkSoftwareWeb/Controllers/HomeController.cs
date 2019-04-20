@@ -22,11 +22,6 @@ namespace RepairWorkSoftwareWeb.Controllers
             return View();
         }
 
-        public ActionResult Order()
-        {
-            return View();
-        }
-
         public ActionResult GetAllOrders()
         {
             List<OrderViewModel> orderViewModels = service.GetList();
@@ -34,8 +29,8 @@ namespace RepairWorkSoftwareWeb.Controllers
             {
                 CustomerFIO = "Тестовое имя",
                 WorkName = "Тестовое название",
-                Count = 5,
-                Sum = 200,
+                Count = "5",
+                Sum = "200",
                 Status = "Тестовый статус",
                 DateCreate = "05.03.2019",
                 DateImplement = "04.02.2018"

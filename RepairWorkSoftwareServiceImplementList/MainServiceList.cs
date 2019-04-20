@@ -92,13 +92,13 @@ namespace RepairWorkSoftwareServiceImplementList
                 }
                 result.Add(new OrderViewModel
                 {
-                    Id = source.Orders[i].Id,
-                    CustomerId = source.Orders[i].CustomerId,
+                    Id = Convert.ToString(source.Orders[i].Id),
+                    CustomerId = Convert.ToString(source.Orders[i].CustomerId),
                     CustomerFIO = customerFIO,
-                    WorkId = source.Orders[i].WorkId,
+                    WorkId = Convert.ToString(source.Orders[i].WorkId),
                     WorkName = workName,
-                    Count = source.Orders[i].Count,
-                    Sum = source.Orders[i].Sum,
+                    Count = Convert.ToString(source.Orders[i].Count),
+                    Sum = Convert.ToString(source.Orders[i].Sum),
                     DateCreate = source.Orders[i].DateCreate.ToLongDateString(),
                     DateImplement = source.Orders[i].DateImplement?.ToLongDateString(),
                     Status = source.Orders[i].Status.ToString()
