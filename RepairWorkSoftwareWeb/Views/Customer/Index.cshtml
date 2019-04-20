@@ -1,0 +1,50 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<h2>Клиенты</h2>
+<table id="customer-table" class="table">
+    <thead>
+        <tr><th>ФИО клиента</th></tr>
+    </thead>
+    <tbody>
+        <tr id="customer-list"></tr>
+    </tbody>
+</table>
+
+<script>
+    $(function () {
+        $("#refreshCustomer_Button").click(function () {
+            $.getJSON("/customer/GetAllCustomers", null, fillList);
+        });
+    });
+</script>
+
+<script>
+    $(function () {
+        $("#createCustomer_Button").click(function () {
+            window.open("/customer/EditCustomer", "_self")
+        });
+    });
+</script>
+
+<script>
+    function fillList(customers) {
+        $("#customer-list").text("");
+        $.each(customers, function (i) {
+            $("#customer-list").append("<td>" + this.CustomerFIO + "</td>");
+        });
+    }
+</script>
+
+<script>
+    $(function () {
+        $("#back_Button").click(function () {
+            window.open("/customer/Index", "_self")
+        });
+    });
+</script>
+
+<input type="button" id="createCustomer_Button" value="Создать" />
+<input type="button" id="refreshCustomer_Button" value="Обновить" />
+<input type="button" id="back_Button" value="Назад" />

@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "Create Customer Page";
+}
+
+<h2>Редактирование клиента</h2>
+
+<form id="customerForm">
+    <div class="form-group">
+        <label for="CustomerFIO">ФИО клиента</label>
+        <input type="text" class="form-control" name="CustomerFIO">
+    </div>
+    <input id="create_Button" type="button" value="Создать" />
+</form>
+
+<script type="text/javascript">
+    $('#create_Button').click(function () {
+        $.post("/api/customerRest",
+            $("#customerForm").serialize(),
+            function (value) {
+                $('#contacts').append('<li>' + value.Name + '</li>');
+            },
+            "json"
+        );
+    });
+</script>
