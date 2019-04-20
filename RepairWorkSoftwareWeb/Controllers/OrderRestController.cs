@@ -12,15 +12,7 @@ namespace RepairWorkSoftwareWeb.Controllers
 {
     public class OrderRestController : ApiController
     {
-        [Dependency]
-        private IUnityContainer container { get; set; }
-
-        private readonly IMainService orderService;
-
-        public OrderRestController()
-        {
-            var orderService = container.Resolve<IMainService>();
-        }
+        private IMainService orderService;
 
         public OrderRestController(IMainService orderService)
         {
