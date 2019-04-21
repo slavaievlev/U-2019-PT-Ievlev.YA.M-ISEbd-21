@@ -1,0 +1,43 @@
+﻿@{
+    ViewBag.Title = "Work Page";
+}
+
+<h2>Услуги</h2>
+<table id="work-table" class="table">
+    <thead>
+        <tr><th>Название работы</th><th>Цена</th></tr>
+    </thead>
+    <tbody id="work-list">
+    </tbody>
+</table>
+
+<script>
+    $(function () {
+        $("#refreshWork_Button").click(function () {
+            $.getJSON("/work/GetAllWorks", null, fillList);
+        });
+    });
+</script>
+
+<script>
+    $(function () {
+        $("#createWork_Button").click(function () {
+            window.open("/work/EditWork", "_self");
+        });
+    });
+</script>
+
+<script>
+    function fillList(works) {
+        $("#work-list").text("");
+        $.each(works, function (i) {
+            $("#work-list").append(
+                "<tr><td>" + this.WorkName + "</td>" +
+                "<td>" + this.Price + "<td></tr>"
+            );
+        });
+    }
+</script>
+
+<input type="button" id="createWork_Button" value="Добавить" />
+<input type="button" id="refreshWork_Button" value="Обновить" />

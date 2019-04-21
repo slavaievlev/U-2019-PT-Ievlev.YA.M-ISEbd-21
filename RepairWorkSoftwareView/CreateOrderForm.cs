@@ -118,7 +118,7 @@ namespace RepairWorkSoftwareView
                     int id = Convert.ToInt32(comboBoxWork.SelectedValue);
                     WorkViewModel work = workService.GetElement(id);
                     int count = Convert.ToInt32(textBoxCountInput.Text);
-                    textBoxSumInput.Text = (count * work.Price).ToString();
+                    textBoxSumInput.Text = (count * Convert.ToInt32(work.Price)).ToString();
                 }
                 catch (Exception ex)
                 {

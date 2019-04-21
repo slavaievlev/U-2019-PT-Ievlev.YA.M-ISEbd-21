@@ -1,0 +1,70 @@
+﻿@{
+    ViewBag.Title = "Work Edit Page";
+}
+
+<h2>Редактирование услуги</h2>
+
+<form action="/api/workRest" method="post">
+    <div class="form-group">
+        <label for="WorkName">Название услуги</label>
+        <input type="text" class="form-control" name="model.WorkName">
+    </div>
+    <div class="form-group">
+        <label for="Price">Цена</label>
+        <input type="text" class="form-control" name="model.Price">
+    </div>
+    <table id="materialwork-table" class="table">
+        <thead>
+            <tr><th>Название материала</th><th>Количество</th></tr>
+        </thead>
+        <tbody id="materialwork-list">
+            <tr>
+                <td><input type="text" name="model.WorkMaterials[0].MaterialName" value="материал 1" /></td>
+                <td><input type="text" name="model.WorkMaterials[0].Count" value="5" /></td>
+            </tr>
+            <tr>
+                <td><input type="text" name="model.WorkMaterials[1].MaterialName" value="материал 2" /></td>
+                <td><input type="text" name="model.WorkMaterials[1].Count" value="7" /></td>
+            </tr>
+            <tr>
+                <td><input type="text" name="model.WorkMaterials[2].MaterialName" value="материал 3" /></td>
+                <td><input type="text" name="model.WorkMaterials[2].Count" value="3" /></td>
+            </tr>
+        </tbody>
+    </table>
+    <input type="submit" value="Save" />
+</form>
+
+<script type="text/javascript">
+    $('#create_Button').click(function () {
+        $.post("/work/Edit",
+            $("#workForm").serialize(),
+            function (value) {
+                $('#contacts').append('<li>' + value.Name + '</li>');
+            },
+            "json"
+        );
+    });
+</script>
+
+<script>
+    $(function () {
+        $("#refreshCustomer_Button").click(function () {
+            $.getJSON("/work/GetAllMaterialWork", null, fillList);
+        });
+    });
+</script>
+
+<script>
+    function fillList(customers) {
+        $("#work-list").text("");
+        $.each(customers, function (i) {
+            $("#work-list").append(
+                "<tr><td>" + this.MaterialName + "</td>" + 
+                "<td>" + this.Count + "</td></tr>"
+            );
+        });
+    }
+</script>
+
+<input type="button" id="refreshCustomer_Button" value="Обновить" />
