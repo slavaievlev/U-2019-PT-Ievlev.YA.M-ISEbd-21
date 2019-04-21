@@ -2,9 +2,13 @@
     ViewBag.Title = "Work Edit Page";
 }
 
+<script>
+    var materialIndex = 3;
+</script>
+
 <h2>Редактирование услуги</h2>
 
-<form action="/api/workRest" method="post">
+<form action="/work/Post" method="post">
     <div class="form-group">
         <label for="WorkName">Название услуги</label>
         <input type="text" class="form-control" name="model.WorkName">
@@ -17,54 +21,46 @@
         <thead>
             <tr><th>Название материала</th><th>Количество</th></tr>
         </thead>
-        <tbody id="materialwork-list">
-            <tr>
-                <td><input type="text" name="model.WorkMaterials[0].MaterialName" value="материал 1" /></td>
-                <td><input type="text" name="model.WorkMaterials[0].Count" value="5" /></td>
-            </tr>
-            <tr>
-                <td><input type="text" name="model.WorkMaterials[1].MaterialName" value="материал 2" /></td>
-                <td><input type="text" name="model.WorkMaterials[1].Count" value="7" /></td>
-            </tr>
-            <tr>
-                <td><input type="text" name="model.WorkMaterials[2].MaterialName" value="материал 3" /></td>
-                <td><input type="text" name="model.WorkMaterials[2].Count" value="3" /></td>
-            </tr>
-        </tbody>
+        <tbody id="materialwork-list"></tbody>
     </table>
     <input type="submit" value="Save" />
 </form>
 
-<script type="text/javascript">
-    $('#create_Button').click(function () {
-        $.post("/work/Edit",
-            $("#workForm").serialize(),
-            function (value) {
-                $('#contacts').append('<li>' + value.Name + '</li>');
-            },
-            "json"
-        );
-    });
-</script>
+
+
+<div class="modal fade" id="addMaterial_Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Редактирование материала</h4>
+            </div>
+            <div class="modal-body">
+                <label for="MaterialName">Название материала</label>
+                <input type="text" class="form-control" id="materialName_Input" name="MaterialName">
+
+                <label for="MaterialCount">Количество</label>
+                <input type="text" class="form-control" id="materialCount_Input" name="MaterialCount">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть окно</button>
+                <button type="button" id="addMaterial_Button" class="btn btn-primary">Добавить</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <script>
     $(function () {
-        $("#refreshCustomer_Button").click(function () {
-            $.getJSON("/work/GetAllMaterialWork", null, fillList);
+        $("#addMaterial_Button").click(function () {
+            $("#materialwork-list").append(
+                "<tr><td><input style=\"border: none\" readonly=\"readonly\" type=\"text\" name=\"model.WorkMaterials[" + materialIndex + "].MaterialName\" value=\"" + $("#materialName_Input").val() + "\" /></td>" +
+                "<td><input style=\"border: none\" readonly=\"readonly\" type=\"text\" name=\"model.WorkMaterials[" + materialIndex++ + "].Count\" value=\"" + $("#materialCount_Input").val() + "\" /></td></tr>"
+            );
         });
     });
 </script>
 
-<script>
-    function fillList(customers) {
-        $("#work-list").text("");
-        $.each(customers, function (i) {
-            $("#work-list").append(
-                "<tr><td>" + this.MaterialName + "</td>" + 
-                "<td>" + this.Count + "</td></tr>"
-            );
-        });
-    }
-</script>
-
-<input type="button" id="refreshCustomer_Button" value="Обновить" />
+<button type="button" data-toggle="modal" data-target="#addMaterial_Modal">Добавить материал</button>
