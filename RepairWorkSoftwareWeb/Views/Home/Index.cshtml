@@ -16,19 +16,9 @@
     $(function() {
         $("#refreshOrders_Button").click(function() {
             $.getJSON("/home/GetAllOrders", null, fillList);
-    });
-});
-</script>
-
-<script>
-    $(function () {
-        $("#createOrder_Button").click(function () {
-            window.open("/order/Index", "_self")
         });
     });
-</script>
 
-<script>
     function fillList(orders) {
         $("#order-list").text("");
         $.each(orders, function (i) {
@@ -43,6 +33,14 @@
             );
         });
     }
+</script>
+
+<script>
+    $(function () {
+        $("#createOrder_Button").click(function () {
+            window.open("/order/Index", "_self")
+        });
+    });
 </script>
 
 <input type="button" id="createOrder_Button" value="Создать заказ" />

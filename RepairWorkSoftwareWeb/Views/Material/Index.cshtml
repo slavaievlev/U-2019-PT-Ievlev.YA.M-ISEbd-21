@@ -11,23 +11,50 @@
     </tbody>
 </table>
 
+<div class="modal fade" id="addMaterial_Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Редактирование материала</h4>
+            </div>
+            <div class="modal-body">
+                <form id="materialForm">
+                    <div class="form-group">
+                        <label for="MaterialName">Название материала</label>
+                        <input type="text" class="form-control" id="materialName_Input" name="MaterialName">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть окно</button>
+                <button type="button" id="addMaterial_Button" class="btn btn-primary">Добавить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#addMaterial_Button').click(function () {
+        $.post("/api/materialRest",
+            $("#materialForm").serialize(),
+            function (value) {
+                $("#refreshMaterial_Button").click();
+            },
+            "json"
+        );
+    });
+</script>
+
 <script>
     $(function () {
         $("#refreshMaterial_Button").click(function () {
             $.getJSON("/material/GetAllMaterials", null, fillList);
         });
     });
-</script>
 
-<script>
-    $(function () {
-        $("#createMaterial_Button").click(function () {
-            window.open("/material/EditMaterial", "_self")
-        });
-    });
-</script>
-
-<script>
     function fillList(materials) {
         $("#material-list").text("");
         $.each(materials, function (i) {
@@ -36,5 +63,5 @@
     }
 </script>
 
-<input type="button" id="createMaterial_Button" value="Создать" />
+<input type="button" id="createMaterial_Button" value="Добавить материал" data-toggle="modal" data-target="#addMaterial_Modal" />
 <input type="button" id="refreshMaterial_Button" value="Обновить" />
