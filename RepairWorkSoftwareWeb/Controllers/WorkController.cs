@@ -40,7 +40,7 @@ namespace RepairWorkSoftwareWeb.Controllers
         }
 
         [HttpPost]
-        public ActionResult Post(WorkViewModel model)
+        public ActionResult Index(WorkViewModel model)
         {
             if (string.IsNullOrEmpty(model.WorkName))
             {

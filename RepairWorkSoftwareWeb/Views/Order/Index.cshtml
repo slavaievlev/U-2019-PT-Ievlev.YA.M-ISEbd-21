@@ -4,20 +4,18 @@
 
 <script>
     function fillCustomersSelectForm(customers) {
-        $("#CustomerId_Select").text("");
+        $("#customerId_Select").text("");
         $.each(customers, function (i) {
-            $("#CustomerId_Select").append("<option>" + this + "</option>");
+            $("#customerId_Select").append("<option value=\"" + this.Id + "\">" + this.CustomerFIO + "</option>");
         });
     }
     function fillWorksSelectForm(works) {
-        $("#WorkId_Select").text("");
+        $("#workId_Select").text("");
         $.each(works, function (i) {
-            $("#WorkId_Select").append("<option>" + this + "</option>");
+            $("#workId_Select").append("<option value=\"" + this.Id + "\">" + this.WorkName + "</option>");
         });
     }
-</script>
 
-<script>
     $.getJSON("/order/GetCustomers", null, fillCustomersSelectForm);
     $.getJSON("/order/GetWorks", null, fillWorksSelectForm);
 </script>
@@ -26,22 +24,22 @@
 
 <form id="orderForm">
     <div class="form-group">
-        <label for="CustomerId_Select">Имя клиента</label>
-        <select class="form-control" name="CustomerId" id="CustomerId_Select"></select>
+        <label for="customerId_Select">Имя клиента</label>
+        <select class="form-control" name="CustomerId" id="customerId_Select"></select>
     </div>
     <div class="form-group">
-        <label for="WorkId_Select">Название услуги</label>
-        <select class="form-control" name="WorkId" id="WorkId_Select"></select>
+        <label for="workId_Select">Название услуги</label>
+        <select class="form-control" name="WorkId" id="workId_Select"></select>
     </div>
     <div class="form-group">
-        <label for="Count">Количество</label>
+        <label for="count_Input">Количество</label>
         <input type="text" class="form-control" name="Count">
     </div>
     <div class="form-group">
-        <label for="Sum">Сумма</label>
-        <input type="text" class="form-control" name="Sum">
+        <label for="sum_Input">Сумма</label>
+        <input type="text" class="form-control" name="sum_Input">
     </div>
-    <input id="create_Button" type="button" value="Создать" />
+    <input id="create_Button" type="button" value="Sum" />
 </form>
 
 <script type="text/javascript">

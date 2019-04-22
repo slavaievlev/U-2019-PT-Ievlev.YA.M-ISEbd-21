@@ -29,28 +29,14 @@ namespace RepairWorkSoftwareWeb.Controllers
 
         public ActionResult GetCustomers()
         {
-            List<string> customerNameList = new List<string>();
             List<CustomerViewModel> customerViewModels = customerService.GetList();
-
-            foreach (CustomerViewModel customerViewModel in customerViewModels)
-            {
-                customerNameList.Add(customerViewModel.CustomerFIO);
-            }
-
-            return Json(customerNameList, JsonRequestBehavior.AllowGet);
+            return Json(customerViewModels, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult GetWorks()
         {
-            List<string> workNameList = new List<string>();
             List<WorkViewModel> workViewModels = workService.GetList();
-
-            foreach (WorkViewModel workViewModel in workViewModels)
-            {
-                workNameList.Add(workViewModel.WorkName);
-            }
-
-            return Json(workNameList, JsonRequestBehavior.AllowGet);
+            return Json(workViewModels, JsonRequestBehavior.AllowGet);
         }
     }
 }
