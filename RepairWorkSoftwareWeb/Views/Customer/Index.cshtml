@@ -5,7 +5,7 @@
 <h2>Клиенты</h2>
 <table id="customer-table" class="table">
     <thead>
-        <tr><th>ФИО клиента</th></tr>
+        <tr><th>Id</th><th>ФИО клиента</th></tr>
     </thead>
     <tbody id="customer-list"></tbody>
 </table>
@@ -22,8 +22,10 @@
             <div class="modal-body">
                 <form id="customerForm">
                     <div class="form-group">
-                        <label for="CustomerFIO">ФИО пользователя</label>
+                        <label for="customerFIO_Input">ФИО пользователя</label>
                         <input type="text" class="form-control" id="customerFIO_Input" name="CustomerFIO">
+                        <label hidden="hidden" for="customerId_Input">Id</label>
+                        <input type="hidden" class="form-control" id="customerId_Input" name="Id">
                     </div>
                 </form>
             </div>
@@ -57,16 +59,39 @@
     function fillList(customers) {
         $("#customer-list").text("");
         $.each(customers, function (i) {
-            $("#customer-list").append("<tr><td>" + this.CustomerFIO + "</td></tr>");
+            $("#customer-list").append(
+                "<tr><td>" + this.Id + "</td>" +
+                "<td>" + this.CustomerFIO + "</td></tr>"
+            );
         });
     }
 </script>
 
-<button type="button" id="createCustomer_Button" data-toggle="modal" data-target="#addCustomer_Modal">Добавить клиента</button>
+<button type="button" id="createCustomer_Button" data-toggle="modal" data-target="#addCustomer_Modal">Добавить</button>
+<button type="button" id="editCustomer_Button" data-toggle="modal" data-target="#addCustomer_Modal">Изменить</button>
 <input type="button" id="refreshCustomer_Button" value="Обновить" />
 
 <script>
     window.onload = function() {
         $("#refreshCustomer_Button").click();
     };
+</script>
+
+
+
+<script>
+    function highlight(e) {
+        if (selected[0]) selected[0].className = '';
+        e.target.parentNode.className = 'selected';
+    }
+
+    var table = document.getElementById('customer-table'), selected = table.getElementsByClassName('selected');
+    table.onclick = highlight;
+
+    $(function () {
+        $("#editCustomer_Button").click(function () {
+            $("#customerId_Input").val($("tr.selected td:nth-child(1)").html());
+            $("#customerFIO_Input").val($("tr.selected td:nth-child(2)").html());
+        });
+    });
 </script>

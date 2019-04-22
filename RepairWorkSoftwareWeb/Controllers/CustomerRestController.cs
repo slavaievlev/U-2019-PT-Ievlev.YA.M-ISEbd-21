@@ -29,10 +29,20 @@ namespace RepairWorkSoftwareWeb.Controllers
                 return response;
             }
 
-            customerService.AddElement(new CustomerBindingModel
+            if (model.Id == 0)
             {
-                CustomerFIO = model.CustomerFIO
-            });
+                customerService.AddElement(new CustomerBindingModel
+                {
+                    CustomerFIO = model.CustomerFIO
+                });
+            } else
+            {
+                customerService.UpdElement(new CustomerBindingModel
+                {
+                    Id = model.Id,
+                    CustomerFIO = model.CustomerFIO
+                });
+            }
 
             response = Request.CreateResponse<CustomerViewModel>(System.Net.HttpStatusCode.Created, model);
             return response;
