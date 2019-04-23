@@ -37,18 +37,6 @@
     </div>
 </div>
 
-<script type="text/javascript">
-    $('#addCustomer_Button').click(function () {
-        $.post("/api/customerRest",
-            $("#customerForm").serialize(),
-            function (value) {
-                $("#refreshCustomer_Button").click();
-            },
-            "json"
-        );
-    });
-</script>
-
 <script>
     $(function () {
         $("#refreshCustomer_Button").click(function () {
@@ -72,22 +60,16 @@
 <button type="button" id="delCustomer_Button">Удалить</button>
 <input type="button" id="refreshCustomer_Button" value="Обновить" />
 
-<script>
-    window.onload = function() {
-        $("#refreshCustomer_Button").click();
-    };
-</script>
-
-
-
-<script>
-    function highlight(e) {
-        if (selected[0]) selected[0].className = '';
-        e.target.parentNode.className = 'selected';
-    }
-
-    var table = document.getElementById('customer-table'), selected = table.getElementsByClassName('selected');
-    table.onclick = highlight;
+<script type="text/javascript">
+    $('#addCustomer_Button').click(function () {
+        $.post("/api/customerRest",
+            $("#customerForm").serialize(),
+            function (value) {
+                $("#refreshCustomer_Button").click();
+            },
+            "json"
+        );
+    });
 
     $(function () {
         $("#createCustomer_Button").click(function () {
@@ -102,9 +84,7 @@
             $("#customerFIO_Input").val($("tr.selected td:nth-child(2)").html());
         });
     });
-</script>
 
-<script>
     $("#delCustomer_Button").click(function () {
         var customerId = $("tr.selected td:nth-child(1)").html();
         var customerFio = $("tr.selected td:nth-child(2)").html();
@@ -121,10 +101,30 @@
             data: myData,
             success: function (data) {
                 $("#refreshCustomer_Button").click();
+                console.log(data);
             },
             error: function (err) {
                 console.log(err);
             }
         });
     });
+</script>
+
+<script>
+    window.onload = function() {
+        $("#refreshCustomer_Button").click();
+    };
+</script>
+
+
+
+@* Для выделения строк таблицы *@
+<script>
+    function highlight(e) {
+        if (selected[0]) selected[0].className = '';
+        e.target.parentNode.className = 'selected';
+    }
+
+    var table = document.getElementById('customer-table'), selected = table.getElementsByClassName('selected');
+    table.onclick = highlight;
 </script>
