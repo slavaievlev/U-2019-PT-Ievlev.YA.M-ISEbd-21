@@ -29,13 +29,38 @@ namespace RepairWorkSoftwareWeb.Controllers
                 return response;
             }
 
-            materialService.AddElement(new MaterialBindingModel
+            if (model.Id == 0)
             {
-                MaterialName = model.MaterialName
-            });
+                materialService.AddElement(new MaterialBindingModel
+                {
+                    MaterialName = model.MaterialName
+                });
+            } else
+            {
+                materialService.UpdElement(new MaterialBindingModel
+                {
+                    Id = model.Id,
+                    MaterialName = model.MaterialName
+                });
+            }
 
             response = Request.CreateResponse<MaterialViewModel>(System.Net.HttpStatusCode.Created, model);
             return response;
+        }
+
+        [HttpPut]
+        [Route("api/materialRest/delete/")]
+        public string Delete([FromBody]MaterialViewModel model)
+        {
+            try
+            {
+                materialService.DelElement(model.Id);
+            }
+            catch (Exception ex)
+            {
+                // TODO
+            }
+            return "OK";
         }
     }
 }
