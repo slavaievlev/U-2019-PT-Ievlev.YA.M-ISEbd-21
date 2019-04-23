@@ -69,6 +69,7 @@
 
 <button type="button" id="createCustomer_Button" data-toggle="modal" data-target="#addCustomer_Modal">Добавить</button>
 <button type="button" id="editCustomer_Button" data-toggle="modal" data-target="#addCustomer_Modal">Изменить</button>
+<button type="button" id="delCustomer_Button">Удалить</button>
 <input type="button" id="refreshCustomer_Button" value="Обновить" />
 
 <script>
@@ -89,9 +90,41 @@
     table.onclick = highlight;
 
     $(function () {
+        $("#createCustomer_Button").click(function () {
+            $("#customerId_Input").val("");
+            $("#customerFIO_Input").val("");
+        });
+    });
+
+    $(function () {
         $("#editCustomer_Button").click(function () {
             $("#customerId_Input").val($("tr.selected td:nth-child(1)").html());
             $("#customerFIO_Input").val($("tr.selected td:nth-child(2)").html());
+        });
+    });
+</script>
+
+<script>
+    $("#delCustomer_Button").click(function () {
+        var customerId = $("tr.selected td:nth-child(1)").html();
+        var customerFio = $("tr.selected td:nth-child(2)").html();
+
+        var myData = {};
+        myData.Id = customerId;
+        myData.CustomerFIO = customerFio;
+
+        $.ajax({
+            type: 'PUT',
+            async: true,
+            dataType: "json",
+            url: "/api/customerRest/delete",
+            data: myData,
+            success: function (data) {
+                $("#refreshCustomer_Button").click();
+            },
+            error: function (err) {
+                console.log(err);
+            }
         });
     });
 </script>

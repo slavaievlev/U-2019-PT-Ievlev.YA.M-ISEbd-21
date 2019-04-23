@@ -47,5 +47,19 @@ namespace RepairWorkSoftwareWeb.Controllers
             response = Request.CreateResponse<CustomerViewModel>(System.Net.HttpStatusCode.Created, model);
             return response;
         }
+
+        [HttpPut]
+        [Route("api/customerRest/delete/")]
+        public string Delete([FromBody]CustomerViewModel model)
+        {
+            try
+            {
+                customerService.DelElement(model.Id);
+            } catch (Exception ex)
+            {
+                // TODO
+            }
+            return "OK";
+        }
     }
 }
