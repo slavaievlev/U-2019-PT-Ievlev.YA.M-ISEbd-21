@@ -18,5 +18,20 @@ namespace RepairWorkSoftwareWeb.Controllers
         {
             this.workService = workService;
         }
+
+        [HttpPut]
+        [Route("api/workRest/delete/")]
+        public string Delete([FromBody]WorkViewModel model)
+        {
+            try
+            {
+                workService.DelElement(model.Id);
+            }
+            catch (Exception ex)
+            {
+                // TODO
+            }
+            return "OK";
+        }
     }
 }

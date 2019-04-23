@@ -5,11 +5,15 @@
 <h2>Услуги</h2>
 <table id="work-table" class="table">
     <thead>
-        <tr><th>Название работы</th><th>Цена</th></tr>
+        <tr><th>Id</th><th>Название работы</th><th>Цена</th></tr>
     </thead>
-    <tbody id="work-list">
-    </tbody>
+    <tbody id="work-list"></tbody>
 </table>
+
+<input type="button" id="createWork_Button" value="Добавить" />
+@*<button type="button" id="editWork_Button">Изменить</button>*@
+<button type="button" id="delWork_Button">Удалить</button>
+<input type="button" id="refreshWork_Button" value="Обновить" />
 
 <script>
     $(function () {
@@ -17,33 +21,64 @@
             $.getJSON("/work/GetAllWorks", null, fillList);
         });
     });
-</script>
 
-<script>
+    function fillList(works) {
+        $("#work-list").text("");
+        $.each(works, function (i) {
+            $("#work-list").append(
+                "<tr>" +
+                "<td>" + this.Id + "</td>" +
+                "<td>" + this.WorkName + "</td>" +
+                "<td>" + this.Price + "<td>" +
+                "</tr>"
+            );
+        });
+    }
+
     $(function () {
         $("#createWork_Button").click(function () {
             window.open("/work/EditWork", "_self");
         });
     });
-</script>
 
-<script>
-    function fillList(works) {
-        $("#work-list").text("");
-        $.each(works, function (i) {
-            $("#work-list").append(
-                "<tr><td>" + this.WorkName + "</td>" +
-                "<td>" + this.Price + "<td></tr>"
-            );
+    $("#delWork_Button").click(function () {
+        var workId = $("tr.selected td:nth-child(1)").html();
+
+        var myData = {};
+        myData.Id = workId;
+
+        $.ajax({
+            type: 'PUT',
+            async: true,
+            dataType: "json",
+            url: "/api/workRest/delete",
+            data: myData,
+            success: function (data) {
+                $("#refreshWork_Button").click();
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
         });
-    }
+    });
 </script>
-
-<input type="button" id="createWork_Button" value="Добавить" />
-<input type="button" id="refreshWork_Button" value="Обновить" />
 
 <script>
     window.onload = function () {
         $("#refreshWork_Button").click();
     };
+</script>
+
+
+
+@* Для выделения строк таблицы *@
+<script>
+    function highlight(e) {
+        if (selected[0]) selected[0].className = '';
+        e.target.parentNode.className = 'selected';
+    }
+
+    var table = document.getElementById('work-table'), selected = table.getElementsByClassName('selected');
+    table.onclick = highlight;
 </script>
