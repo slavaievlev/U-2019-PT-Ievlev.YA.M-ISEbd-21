@@ -47,7 +47,7 @@
             $.post("/api/orderRest",
                 $("#orderForm").serialize(),
                 function (value) {
-                    $('#contacts').append('<li>' + value.Name + '</li>');
+                    window.open("/", "_self")
                 },
                 "json"
             );

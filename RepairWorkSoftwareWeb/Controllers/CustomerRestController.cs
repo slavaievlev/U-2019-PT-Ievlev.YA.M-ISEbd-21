@@ -55,7 +55,8 @@ namespace RepairWorkSoftwareWeb.Controllers
             try
             {
                 customerService.DelElement(model.Id);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 // TODO
             }
