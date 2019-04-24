@@ -19,7 +19,7 @@
     </div>
     <table id="materialwork-table" class="table">
         <thead>
-            <tr><th></th><th>Название материала</th><th>Количество</th></tr>
+            <tr><th>Id</th><th>Название материала</th><th>Количество</th><th>Удалить</th><th>Редактировать</th></tr>
         </thead>
         <tbody id="materialwork-list"></tbody>
     </table>
@@ -67,12 +67,32 @@
     $(function () {
         $("#addMaterial_Button").click(function () {
             $("#materialwork-list").append(
-                "<tr><td><input style=\"border: none; display: none;\" readonly=\"readonly\" type=\"text\" name=\"model.WorkMaterials[" + materialIndex + "].MaterialId\" value=\"" + $("#materialName_Select").val() + "\" /></td>" +
-                "<td><input style=\"border: none\" readonly=\"readonly\" type=\"text\" name=\"model.WorkMaterials[" + materialIndex + "].MaterialName\" value=\"" + $("#materialName_Select option:selected").text() + "\" /></td>" +
-                "<td><input style=\"border: none\" readonly=\"readonly\" type=\"text\" name=\"model.WorkMaterials[" + materialIndex++ + "].Count\" value=\"" + $("#materialCount_Input").val() + "\" /></td></tr>"
+                "<tr>" +
+                "<td><input style=\"border: none;\" readonly=\"readonly\" type=\"text\" name=\"model.WorkMaterials[" + materialIndex + "].MaterialId\" value=\"" + $("#materialName_Select").val() + "\" /></td>" +
+                "<td><input style=\"border: none;\" readonly=\"readonly\" type=\"text\" name=\"model.WorkMaterials[" + materialIndex + "].MaterialName\" value=\"" + $("#materialName_Select option:selected").text() + "\" /></td>" +
+                "<td><input style=\"border: none;\" readonly=\"readonly\" type=\"text\" name=\"model.WorkMaterials[" + materialIndex++ + "].Count\" value=\"" + $("#materialCount_Input").val() + "\" /></td>" +
+                "<td><button onclick=\"deleteRow_Func(this)\" type=\"button\">-</button></td>" +
+                "</tr>"
             );
         });
     });
 </script>
 
-<button type="button" data-toggle="modal" data-target="#addMaterial_Modal">Добавить материал</button>
+<script>
+    function deleteRow_Func(ctl) {
+        $(ctl).parents("tr").remove();
+    }
+</script>
+
+<button type="button" data-toggle="modal" data-target="#addMaterial_Modal">Добавить</button>
+
+@* Для выделения строк таблицы *@
+<script>
+    function highlight(e) {
+        if (selected[0]) selected[0].className = '';
+        e.target.parentNode.className = 'selected';
+    }
+
+    var table = document.getElementById('materialwork-table'), selected = table.getElementsByClassName('selected');
+    table.onclick = highlight;
+</script>
