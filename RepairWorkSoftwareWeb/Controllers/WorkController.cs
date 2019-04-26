@@ -39,6 +39,14 @@ namespace RepairWorkSoftwareWeb.Controllers
             return Json(workViewModels, JsonRequestBehavior.AllowGet);
         }
 
+        public ActionResult GetWork(string workid)
+        {
+            // TODO проверка: строка число или нет?
+
+            WorkViewModel workViewModel = workService.GetElement(Convert.ToInt32(workid));
+            return Json(workViewModel, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         public ActionResult Index(WorkViewModel model)
         {
@@ -70,13 +78,26 @@ namespace RepairWorkSoftwareWeb.Controllers
                         Count = model.WorkMaterials[i].Count
                     });
                 }
-
-                workService.AddElement(new WorkBindingModel
+                
+                if (model.Id == 0)
                 {
-                    WorkName = model.WorkName,
-                    Price = Convert.ToInt32(model.Price),
-                    WorkMaterials = workMaterialBM
-                });
+                    workService.AddElement(new WorkBindingModel
+                    {
+                        WorkName = model.WorkName,
+                        Price = Convert.ToInt32(model.Price),
+                        WorkMaterials = workMaterialBM
+                    });
+                }
+                else
+                {
+                    workService.UpdElement(new WorkBindingModel
+                    {
+                        Id = model.Id,
+                        WorkName = model.WorkName,
+                        Price = Convert.ToInt32(model.Price),
+                        WorkMaterials = workMaterialBM
+                    });
+                }
             }
             catch (Exception ex)
             {

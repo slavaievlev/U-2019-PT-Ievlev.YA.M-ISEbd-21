@@ -11,7 +11,7 @@
 </table>
 
 <input type="button" id="createWork_Button" value="Добавить" />
-@*<button type="button" id="editWork_Button">Изменить</button>*@
+<button type="button" id="editWork_Button">Изменить</button>
 <button type="button" id="delWork_Button">Удалить</button>
 <input type="button" id="refreshWork_Button" value="Обновить" />
 
@@ -38,6 +38,13 @@
     $(function () {
         $("#createWork_Button").click(function () {
             window.open("/work/EditWork", "_self");
+        });
+    });
+
+    $(function () {
+        $("#editWork_Button").click(function () {
+            var workId = $("tr.selected td:nth-child(1)").html();
+            window.open("/work/EditWork/?workid=" + workId, "_self");
         });
     });
 

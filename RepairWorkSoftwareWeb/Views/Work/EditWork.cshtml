@@ -8,32 +8,97 @@
 
 <h2>Редактирование услуги</h2>
 
-<form action="/work/Index" method="post">
+<script>
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = window.location.search.substring(1),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+            }
+        }
+    };
+
+    var tech = getUrlParameter('workid');
+    if (tech !== undefined) {
+        $(function () {
+            $.getJSON("/work/GetWork/?workid=" + tech, null, fillList);
+        });
+
+        function fillList(material) {
+            $("#materialwork-list").text("");
+            $.each(material.WorkMaterials, function (i) {
+                $("#materialwork-list").append(
+                    "<tr>" +
+                        "<td><input style=\"border: none;\" readonly=\"readonly\" type=\"text\" name=\"model.WorkMaterials[" + materialIndex + "].MaterialId\" value=\"" + this.MaterialId + "\" /></td>" +
+                        "<td><input style=\"border: none;\" readonly=\"readonly\" type=\"text\" name=\"model.WorkMaterials[" + materialIndex + "].MaterialName\" value=\"" + this.MaterialName + "\" /></td>" +
+                        "<td><input style=\"border: none;\" readonly=\"readonly\" type=\"text\" name=\"model.WorkMaterials[" + materialIndex++ + "].Count\" value=\"" + this.Count + "\" /></td>" +
+                        "<td><button onclick=\"deleteRow_Func(this)\" type=\"button\">-d</button></td>" +
+                        "<td><button onclick=\"editRow_Func(this)\" data-toggle=\"modal\" data-target=\"#addMaterial_Modal\" type=\"button\">-e</button></td>" +
+                    "</tr>"
+                );
+            });
+
+            $("#workName_Input").val(material.WorkName);
+            $("#workPrice_Input").val(material.Price);
+            $("#workId_Input").val(material.Id);
+        }
+    }
+</script>
+
+<form action="/work/Index" method="post" id="work-form">
+    <div class="form-group hidden">
+        <label for="WorkId">Id</label>
+        <input id="workId_Input" type="text" class="form-control" name="model.Id">
+    </div>
     <div class="form-group">
         <label for="WorkName">Название услуги</label>
-        <input type="text" class="form-control" name="model.WorkName">
+        <input id="workName_Input" type="text" class="form-control" name="model.WorkName">
     </div>
     <div class="form-group">
         <label for="Price">Цена</label>
-        <input type="text" class="form-control" name="model.Price">
+        <input id="workPrice_Input" type="text" class="form-control" name="model.Price">
     </div>
     <table id="materialwork-table" class="table">
         <thead>
             <tr><th>Id</th><th>Название материала</th><th>Количество</th><th>Удалить</th><th>Редактировать</th></tr>
         </thead>
         <tbody id="materialwork-list">
-            <tr>
-                
-                <td><input style="border: none;" readonly="readonly" type="text" name="model.WorkMaterials[1].MaterialId" value="1"/></td>
+            @*<tr>
+                <td><input style="border: none;" readonly="readonly" type="text" name="model.WorkMaterials[1].Id" value="1"/></td>
                 <td><input style="border: none;" readonly="readonly" type="text" name="model.WorkMaterials[1].MaterialName" value="Материал #1"/></td>
                 <td><input style="border: none;" readonly="readonly" type="text" name="model.WorkMaterials[1].Count" value="444"/></td>
                 <td><button onclick="deleteRow_Func(this)" type="button">-d</button></td>
                 <td><button onclick="editRow_Func(this)" data-toggle="modal" data-target="#addMaterial_Modal" type="button">-e</button></td>
-            </tr>
+            </tr>*@
         </tbody>
     </table>
-    <input type="submit" value="Сохранить" />
+    <input id="outForm_Submit" type="submit" value="Сохранить" />
 </form>
+
+<script>
+    $("#outForm_Submit").click(function () {
+        var table = document.getElementById("materialwork-table");
+        var zeroIndex = 0;
+        $('#materialwork-table tr:gt(0)').each(function () {
+            //$(this).find('input').attr('name', "model.WorkMaterials[" + zeroIndex + "].MaterialId")
+            //$(this).find('input').attr('name', "model.WorkMaterials[" + zeroIndex + "].MaterialName")
+            //$(this).find('input').attr('name', "model.WorkMaterials[" + zeroIndex++ + "].Count")
+            var this_row = $(this);
+            $.trim(this_row.find('td:eq(0)').find('input').attr('name', "model.WorkMaterials[" + zeroIndex + "].MaterialId"));
+            $.trim(this_row.find('td:eq(1)').find('input').attr('name', "model.WorkMaterials[" + zeroIndex + "].MaterialName"));
+            $.trim(this_row.find('td:eq(2)').find('input').attr('name', "model.WorkMaterials[" + zeroIndex + "].Count"));
+            zeroIndex++;
+        });
+
+        //$('form#work-form').submit();
+    });
+</script>
 
 
 
