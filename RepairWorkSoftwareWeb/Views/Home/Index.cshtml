@@ -10,13 +10,55 @@
     <tbody id="order-list"></tbody>
 </table>
 
-<button type="button" id="createOrder_Button">Создать</button>
-<input type="button" id="refreshOrders_Button" value="Обновить" />
+<button type="button" id="createOrder_Button">Создать заказ</button>
+<button type="button" id="progressOrder_Button">Отдать на выполнение</button>
+<button type="button" id="readyOrder_Button">Заказ готов</button>
+<button type="button" id="payOrder_Button">Заказ оплачен</button>
+<button type="button" id="refreshOrders_Button">Обновить</button>
 
 <script>
     $(function () {
+        $("#progressOrder_Button").click(function () {
+            var orderid = $("tr.selected td:nth-child(1)").html();
+            $.ajax({
+                url: 'order/ProgressOrder/?orderid=' + orderid,
+                type: 'PUT',
+                success: function(result) {
+                    $("#refreshOrders_Button").click();
+                }
+            });
+        });
+    });
+
+    $(function () {
+        $("#readyOrder_Button").click(function () {
+            var orderid = $("tr.selected td:nth-child(1)").html();
+            $.ajax({
+                url: 'order/IsReadyOrder/?orderid=' + orderid,
+                type: 'PUT',
+                success: function(result) {
+                    $("#refreshOrders_Button").click();
+                }
+            });
+        });
+    });
+
+    $(function () {
+        $("#payOrder_Button").click(function () {
+            var orderid = $("tr.selected td:nth-child(1)").html();
+            $.ajax({
+                url: 'order/PayOrder/?orderid=' + orderid,
+                type: 'PUT',
+                success: function(result) {
+                    $("#refreshOrders_Button").click();
+                }
+            });
+        });
+    });
+
+    $(function () {
         $("#createOrder_Button").click(function () {
-            window.open("/order/Index", "_self")
+            window.open("/order/Index", "_self");
         });
     });
 
