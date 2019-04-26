@@ -33,14 +33,41 @@
     </div>
     <div class="form-group">
         <label for="count_Input">Количество</label>
-        <input type="text" class="form-control" name="Count">
+        <input id="count_Input" type="text" class="form-control" name="Count">
     </div>
     <div class="form-group">
         <label for="sum_Input">Сумма</label>
-        <input type="text" class="form-control" name="Sum">
+        <input id="sum_Input" readonly="readonly" type="text" class="form-control" name="Sum">
     </div>
     <input id="create_Button" type="button" value="Создать" />
 </form>
+
+<script>
+    function calcSum_Func() {
+        if ($('#workId_Select').val() != 0 && $('#count_Select').val() != 0) {
+            var workId = $('#workId_Select').val();
+            var count = Number($('#count_Input').val());
+            $.ajax({
+                type: 'GET',
+                dataType: "json",
+                url: "/work/GetWork/?workid=" + workId,
+                success: function (data) {
+                    var workPrice = Number(data.Price);
+                    console.log(workPrice);
+                    console.log(count);
+                    $("#sum_Input").val(count * workPrice);
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+        }
+    }
+
+    $('#count_Input').on('input', function(){
+        calcSum_Func();
+    });
+</script>
 
 <script type="text/javascript">
         $('#create_Button').click(function () {
