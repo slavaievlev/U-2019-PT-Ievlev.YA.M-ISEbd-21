@@ -23,14 +23,7 @@ namespace RepairWorkSoftwareWeb.Controllers
         [Route("api/workRest/delete/")]
         public string Delete([FromBody]WorkViewModel model)
         {
-            try
-            {
-                workService.DelElement(model.Id);
-            }
-            catch (Exception ex)
-            {
-                // TODO
-            }
+            workService.DelElement(model.Id);
             return "OK";
         }
     }

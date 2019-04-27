@@ -25,8 +25,7 @@ namespace RepairWorkSoftwareWeb.Controllers
 
             if (string.IsNullOrEmpty(model.MaterialName))
             {
-                response = Request.CreateResponse<MaterialViewModel>(System.Net.HttpStatusCode.Forbidden, model);  // TODO
-                return response;
+                throw new Exception("Название материала не указано");
             }
 
             if (model.Id == 0)
@@ -52,14 +51,7 @@ namespace RepairWorkSoftwareWeb.Controllers
         [Route("api/materialRest/delete/")]
         public string Delete([FromBody]MaterialViewModel model)
         {
-            try
-            {
-                materialService.DelElement(model.Id);
-            }
-            catch (Exception ex)
-            {
-                // TODO
-            }
+            materialService.DelElement(model.Id);
             return "OK";
         }
     }

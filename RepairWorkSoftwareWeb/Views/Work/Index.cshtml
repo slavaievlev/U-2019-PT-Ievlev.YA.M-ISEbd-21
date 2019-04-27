@@ -1,5 +1,8 @@
 ﻿@{
     ViewBag.Title = "Work Page";
+
+    var jss = new System.Web.Script.Serialization.JavaScriptSerializer();
+    var controllerMessage = jss.Serialize(ViewBag.Message);
 }
 
 <h2>Услуги</h2>
@@ -14,6 +17,13 @@
 <button type="button" id="editWork_Button">Изменить</button>
 <button type="button" id="delWork_Button">Удалить</button>
 <input type="button" id="refreshWork_Button" value="Обновить" />
+
+<script>
+    var message = JSON.parse('@Html.Raw(controllerMessage)');
+    if (message != "" && message != null) {
+        alert(message);
+    }
+</script>
 
 <script>
     $(function () {

@@ -25,8 +25,7 @@ namespace RepairWorkSoftwareWeb.Controllers
 
             if (string.IsNullOrEmpty(model.CustomerFIO))
             {
-                response = Request.CreateResponse<CustomerViewModel>(System.Net.HttpStatusCode.Forbidden, model);  // TODO
-                return response;
+                throw new Exception("Не указано ФИО клиента");
             }
 
             if (model.Id == 0)
@@ -52,14 +51,7 @@ namespace RepairWorkSoftwareWeb.Controllers
         [Route("api/customerRest/delete/")]
         public string Delete([FromBody]CustomerViewModel model)
         {
-            try
-            {
-                customerService.DelElement(model.Id);
-            }
-            catch (Exception ex)
-            {
-                // TODO
-            }
+            customerService.DelElement(model.Id);
             return "OK";
         }
     }

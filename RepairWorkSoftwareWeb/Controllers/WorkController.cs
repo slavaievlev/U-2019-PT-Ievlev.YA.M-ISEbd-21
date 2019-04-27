@@ -41,8 +41,6 @@ namespace RepairWorkSoftwareWeb.Controllers
 
         public ActionResult GetWork(string workid)
         {
-            // TODO проверка: строка число или нет?
-
             WorkViewModel workViewModel = workService.GetElement(Convert.ToInt32(workid));
             return Json(workViewModel, JsonRequestBehavior.AllowGet);
         }
@@ -52,17 +50,20 @@ namespace RepairWorkSoftwareWeb.Controllers
         {
             if (string.IsNullOrEmpty(model.WorkName))
             {
-                // TODO
+                ViewBag.Message = "Название услуги не указано";
+                return View();
             }
 
             if (string.IsNullOrEmpty(model.Price))
             {
-                // TODO
+                ViewBag.Message = "Цена услуги не указана";
+                return View();
             }
 
             if (model.WorkMaterials == null || model.WorkMaterials.Count == 0)
             {
-                // TODO
+                ViewBag.Message = "Материалы для услуги не добавлены";
+                return View();
             }
 
             try
@@ -78,7 +79,7 @@ namespace RepairWorkSoftwareWeb.Controllers
                         Count = model.WorkMaterials[i].Count
                     });
                 }
-                
+
                 if (model.Id == 0)
                 {
                     workService.AddElement(new WorkBindingModel
@@ -98,12 +99,13 @@ namespace RepairWorkSoftwareWeb.Controllers
                         WorkMaterials = workMaterialBM
                     });
                 }
-            }
-            catch (Exception ex)
+            } catch (Exception ex)
             {
-                // TODO
+                ViewBag.Message = ex.GetBaseException().ToString();
+                return View();
             }
 
+            ViewBag.Message = "Услуга успешно добавлена!";
             return View();
         }
     }

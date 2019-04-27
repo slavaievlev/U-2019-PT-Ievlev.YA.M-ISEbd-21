@@ -68,7 +68,10 @@
                 $("#refreshMaterial_Button").click();
             },
             "json"
-        );
+        )
+            .fail(function (xhr, status, error) {
+                alert(xhr.responseJSON.ExceptionMessage);
+            });
     });
 
     $(function () {
