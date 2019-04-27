@@ -53,12 +53,10 @@
                 url: "/work/GetWork/?workid=" + workId,
                 success: function (data) {
                     var workPrice = Number(data.Price);
-                    console.log(workPrice);
-                    console.log(count);
                     $("#sum_Input").val(count * workPrice);
                 },
                 error: function (err) {
-                    console.log(err);
+                    alert(err);
                 }
             });
         }
@@ -77,6 +75,9 @@
                     window.open("/", "_self")
                 },
                 "json"
-            );
+            )
+                .fail(function (xhr, status, error) {
+                    alert(xhr.responseJSON.ExceptionMessage);
+                });
         });
 </script>

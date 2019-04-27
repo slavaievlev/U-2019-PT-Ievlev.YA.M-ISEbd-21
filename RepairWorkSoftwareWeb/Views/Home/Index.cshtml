@@ -21,10 +21,13 @@
         $("#progressOrder_Button").click(function () {
             var orderid = $("tr.selected td:nth-child(1)").html();
             $.ajax({
-                url: 'order/ProgressOrder/?orderid=' + orderid,
+                url: '/api/orderRest/progressorder/?orderid=' + orderid,
                 type: 'PUT',
                 success: function(result) {
                     $("#refreshOrders_Button").click();
+                },
+                error: function (xhr, status, error) {
+                    alert(xhr.responseJSON.ExceptionMessage);
                 }
             });
         });
@@ -34,10 +37,13 @@
         $("#readyOrder_Button").click(function () {
             var orderid = $("tr.selected td:nth-child(1)").html();
             $.ajax({
-                url: 'order/IsReadyOrder/?orderid=' + orderid,
+                url: '/api/orderRest/isreadyorder/?orderid=' + orderid,
                 type: 'PUT',
-                success: function(result) {
+                success: function (result) {
                     $("#refreshOrders_Button").click();
+                },
+                error: function (xhr, status, error) {
+                    alert(xhr.responseJSON.ExceptionMessage);
                 }
             });
         });
@@ -47,10 +53,13 @@
         $("#payOrder_Button").click(function () {
             var orderid = $("tr.selected td:nth-child(1)").html();
             $.ajax({
-                url: 'order/PayOrder/?orderid=' + orderid,
+                url: '/api/orderRest/payorder/?orderid=' + orderid,
                 type: 'PUT',
-                success: function(result) {
+                success: function (result) {
                     $("#refreshOrders_Button").click();
+                },
+                error: function (xhr, status, error) {
+                    alert(xhr.responseJSON.ExceptionMessage);
                 }
             });
         });

@@ -38,59 +38,5 @@ namespace RepairWorkSoftwareWeb.Controllers
             List<WorkViewModel> workViewModels = workService.GetList();
             return Json(workViewModels, JsonRequestBehavior.AllowGet);
         }
-
-        public ActionResult ProgressOrder(string orderid)
-        {
-            OrderViewModel orderViewModel = new OrderViewModel();
-            int id = Convert.ToInt32(orderid);
-            try
-            {
-                orderService.TakeOrderInWork(new OrderBindingModel
-                {
-                    Id = id
-                });
-            }
-            catch (Exception ex)
-            {
-                // TODO
-            }
-            return Json(orderViewModel, JsonRequestBehavior.AllowGet);
-        }
-
-        public ActionResult IsReadyOrder(string orderid)
-        {
-            OrderViewModel orderViewModel = new OrderViewModel();
-            int id = Convert.ToInt32(orderid);
-            try
-            {
-                orderService.FinishOrder(new OrderBindingModel
-                {
-                    Id = id
-                });
-            }
-            catch (Exception ex)
-            {
-                // TODO
-            }
-            return Json(orderViewModel, JsonRequestBehavior.AllowGet);
-        }
-
-        public ActionResult PayOrder(string orderid)
-        {
-            OrderViewModel orderViewModel = new OrderViewModel();
-            int id = Convert.ToInt32(orderid);
-            try
-            {
-                orderService.PayOrder(new OrderBindingModel
-                {
-                    Id = id
-                });
-            }
-            catch (Exception ex)
-            {
-                // TODO
-            }
-            return Json(orderViewModel, JsonRequestBehavior.AllowGet);
-        }
     }
 }

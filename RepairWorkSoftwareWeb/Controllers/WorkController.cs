@@ -100,8 +100,8 @@ namespace RepairWorkSoftwareWeb.Controllers
                     });
                 }
             } catch (Exception ex)
-            {
-                ViewBag.Message = ex.GetBaseException().ToString();
+            {                
+                ViewBag.Message = ex.Message;
                 return View();
             }
 

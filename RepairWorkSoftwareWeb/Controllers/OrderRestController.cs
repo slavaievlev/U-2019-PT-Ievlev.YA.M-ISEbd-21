@@ -26,44 +26,84 @@ namespace RepairWorkSoftwareWeb.Controllers
 
             if (string.IsNullOrEmpty(model.CustomerId))
             {
-                response = Request.CreateResponse<OrderViewModel>(System.Net.HttpStatusCode.Forbidden, model);  // TODO
-                return response;
+                throw new Exception("Не указан клиент");
             }
 
             if (string.IsNullOrEmpty(model.WorkId))
             {
-                response = Request.CreateResponse<OrderViewModel>(System.Net.HttpStatusCode.Forbidden, model);  // TODO
-                return response;
+                throw new Exception("Не указана услуга");
             }
 
             if (string.IsNullOrEmpty(model.Count))
             {
-                response = Request.CreateResponse<OrderViewModel>(System.Net.HttpStatusCode.Forbidden, model);  // TODO
-                return response;
+                throw new Exception("Не указано количество услуг в заказе");
             }
 
             if (string.IsNullOrEmpty(model.Sum))
             {
-                response = Request.CreateResponse<OrderViewModel>(System.Net.HttpStatusCode.Forbidden, model);  // TODO
-                return response;
+                throw new Exception("Не подсчитана сумма заказа");
             }
 
-            try
+            orderService.CreateOrder(new OrderBindingModel
             {
-                orderService.CreateOrder(new OrderBindingModel
-                {
-                    CustomerId = Convert.ToInt32(model.CustomerId),
-                    WorkId = Convert.ToInt32(model.WorkId),
-                    Count = Convert.ToInt32(model.Count),
-                    Sum = Convert.ToInt32(model.Sum)
-                });
-            }
-            catch (Exception ex)
-            {
-                // TODO
-            }
+                CustomerId = Convert.ToInt32(model.CustomerId),
+                WorkId = Convert.ToInt32(model.WorkId),
+                Count = Convert.ToInt32(model.Count),
+                Sum = Convert.ToInt32(model.Sum)
+            });
 
             response = Request.CreateResponse<OrderViewModel>(System.Net.HttpStatusCode.Created, model);
+            return response;
+        }
+
+        [HttpPut]
+        [Route("api/orderRest/progressorder/")]
+        public HttpResponseMessage ProgressOrder(string orderid)
+        {
+            HttpResponseMessage response;
+
+            OrderViewModel orderViewModel = new OrderViewModel();
+            int id = Convert.ToInt32(orderid);
+            orderService.TakeOrderInWork(new OrderBindingModel
+            {
+                Id = id
+            });
+
+            response = Request.CreateResponse<string>(System.Net.HttpStatusCode.Created, orderid);
+            return response;
+        }
+
+        [HttpPut]
+        [Route("api/orderRest/isreadyorder/")]
+        public HttpResponseMessage IsReadyOrder(string orderid)
+        {
+            HttpResponseMessage response;
+
+            OrderViewModel orderViewModel = new OrderViewModel();
+            int id = Convert.ToInt32(orderid);
+            orderService.FinishOrder(new OrderBindingModel
+            {
+                Id = id
+            });
+
+            response = Request.CreateResponse<string>(System.Net.HttpStatusCode.Created, orderid);
+            return response;
+        }
+
+        [HttpPut]
+        [Route("api/orderRest/payorder/")]
+        public HttpResponseMessage PayOrder(string orderid)
+        {
+            HttpResponseMessage response;
+
+            OrderViewModel orderViewModel = new OrderViewModel();
+            int id = Convert.ToInt32(orderid);
+            orderService.PayOrder(new OrderBindingModel
+            {
+                Id = id
+            });
+
+            response = Request.CreateResponse<string>(System.Net.HttpStatusCode.Created, orderid);
             return response;
         }
     }
