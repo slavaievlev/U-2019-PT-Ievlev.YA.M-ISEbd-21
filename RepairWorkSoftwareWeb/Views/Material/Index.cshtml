@@ -1,0 +1,133 @@
+﻿@{
+    ViewBag.Title = "Material Page";
+}
+
+<h2>Материалы</h2>
+<table id="material-table" class="table">
+    <thead>
+        <tr><th>Id</th><th>Название материала</th></tr>
+    </thead>
+    <tbody id="material-list"></tbody>
+</table>
+
+<div class="modal fade" id="addMaterial_Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Редактирование материала</h4>
+            </div>
+            <div class="modal-body">
+                <form id="materialForm">
+                    <div class="form-group">
+                        <label for="MaterialName">Название материала</label>
+                        <input type="text" class="form-control" id="materialName_Input" name="MaterialName">
+                        <label hidden="hidden" for="materialId_Input">Id</label>
+                        <input type="hidden" class="form-control" id="materialId_Input" name="Id">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть окно</button>
+                <button type="button" id="addMaterial_Button" class="btn btn-primary">Добавить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("#refreshMaterial_Button").click(function () {
+            $.getJSON("/material/GetAllMaterials", null, fillList);
+        });
+    });
+
+    function fillList(materials) {
+        $("#material-list").text("");
+        $.each(materials, function (i) {
+            $("#material-list").append(
+                "<tr><td>" + this.Id + "</td>" +
+                "<td>" + this.MaterialName + "</td></tr>"
+            );
+        });
+    }
+</script>
+
+<input type="button" id="createMaterial_Button" value="Добавить материал" data-toggle="modal" data-target="#addMaterial_Modal" />
+<button type="button" id="editMaterial_Button" data-toggle="modal" data-target="#addMaterial_Modal">Изменить</button>
+<button type="button" id="delMaterial_Button">Удалить</button>
+<input type="button" id="refreshMaterial_Button" value="Обновить" />
+
+<script type="text/javascript">
+    $('#addMaterial_Button').click(function () {
+        $.post("/api/materialRest",
+            $("#materialForm").serialize(),
+            function (value) {
+                $("#refreshMaterial_Button").click();
+            },
+            "json"
+        )
+            .fail(function (xhr, status, error) {
+                alert(xhr.responseJSON.ExceptionMessage);
+            });
+    });
+
+    $(function () {
+        $("#createMaterial_Button").click(function () {
+            $("#materialId_Input").val("");
+            $("#materialName_Input").val("");
+        });
+    });
+
+    $(function () {
+        $("#editMaterial_Button").click(function () {
+            $("#materialId_Input").val($("tr.selected td:nth-child(1)").html());
+            $("#materialName_Input").val($("tr.selected td:nth-child(2)").html());
+        });
+    });
+
+    $("#delMaterial_Button").click(function () {
+        var materialId = $("tr.selected td:nth-child(1)").html();
+        var materialName = $("tr.selected td:nth-child(2)").html();
+
+        var myData = {};
+        myData.Id = materialId;
+        myData.MaterialName = materialName;
+
+        $.ajax({
+            type: 'PUT',
+            async: true,
+            dataType: "json",
+            url: "/api/materialRest/delete",
+            data: myData,
+            success: function (data) {
+                $("#refreshMaterial_Button").click();
+                console.log(data);
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+    });
+</script>
+
+<script>
+    window.onload = function () {
+        $("#refreshMaterial_Button").click();
+    };
+</script>
+
+
+
+@* Для выделения строк таблицы *@
+<script>
+    function highlight(e) {
+        if (selected[0]) selected[0].className = '';
+        e.target.parentNode.className = 'selected';
+    }
+
+    var table = document.getElementById('material-table'), selected = table.getElementsByClassName('selected');
+    table.onclick = highlight;
+</script>

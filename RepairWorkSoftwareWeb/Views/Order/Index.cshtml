@@ -1,0 +1,83 @@
+﻿@{
+    ViewBag.Title = "Order Page";
+}
+
+<script>
+    function fillCustomersSelectForm(customers) {
+        $("#customerId_Select").text("");
+        $.each(customers, function (i) {
+            $("#customerId_Select").append("<option value=\"" + this.Id + "\">" + this.CustomerFIO + "</option>");
+        });
+    }
+    function fillWorksSelectForm(works) {
+        $("#workId_Select").text("");
+        $.each(works, function (i) {
+            $("#workId_Select").append("<option value=\"" + this.Id + "\">" + this.WorkName + "</option>");
+        });
+    }
+
+    $.getJSON("/order/GetCustomers", null, fillCustomersSelectForm);
+    $.getJSON("/order/GetWorks", null, fillWorksSelectForm);
+</script>
+
+<h2>Редактирование заказа</h2>
+
+<form id="orderForm">
+    <div class="form-group">
+        <label for="customerId_Select">Имя клиента</label>
+        <select class="form-control" name="CustomerId" id="customerId_Select"></select>
+    </div>
+    <div class="form-group">
+        <label for="workId_Select">Название услуги</label>
+        <select class="form-control" name="WorkId" id="workId_Select"></select>
+    </div>
+    <div class="form-group">
+        <label for="count_Input">Количество</label>
+        <input id="count_Input" type="text" class="form-control" name="Count">
+    </div>
+    <div class="form-group">
+        <label for="sum_Input">Сумма</label>
+        <input id="sum_Input" readonly="readonly" type="text" class="form-control" name="Sum">
+    </div>
+    <input id="create_Button" type="button" value="Создать" />
+</form>
+
+<script>
+    function calcSum_Func() {
+        if ($('#workId_Select').val() != 0 && $('#count_Select').val() != 0) {
+            var workId = $('#workId_Select').val();
+            var count = Number($('#count_Input').val());
+            $.ajax({
+                type: 'GET',
+                dataType: "json",
+                url: "/work/GetWork/?workid=" + workId,
+                success: function (data) {
+                    var workPrice = Number(data.Price);
+                    $("#sum_Input").val(count * workPrice);
+                },
+                error: function (err) {
+                    alert(err);
+                }
+            });
+        }
+    }
+
+    $('#count_Input').on('input', function(){
+        calcSum_Func();
+    });
+</script>
+
+<script type="text/javascript">
+        $('#create_Button').click(function () {
+            $.post("/api/orderRest",
+                $("#orderForm").serialize(),
+                function (value) {
+                    window.open("/", "_self")
+                },
+                "json"
+            )
+                .fail(function (xhr, status, error) {
+                    alert(xhr.responseJSON.ExceptionMessage);
+                });
+        });
+</script>

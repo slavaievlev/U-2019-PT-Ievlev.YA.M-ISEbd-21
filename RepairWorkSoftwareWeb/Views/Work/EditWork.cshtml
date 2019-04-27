@@ -1,0 +1,184 @@
+﻿@{
+    ViewBag.Title = "Edit Work Page";
+}
+
+<script>
+    var materialIndex = 0;
+</script>
+
+<h2>Редактирование услуги</h2>
+
+<script>
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = window.location.search.substring(1),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+            }
+        }
+    };
+
+    var tech = getUrlParameter('workid');
+    if (tech !== undefined) {
+        $(function () {
+            $.getJSON("/work/GetWork/?workid=" + tech, null, fillList)
+                .fail(function (xhr, status, error) {
+                    alert(xhr.responseJSON.ExceptionMessage);
+                });
+        });
+
+        function fillList(material) {
+            $("#materialwork-list").text("");
+            $.each(material.WorkMaterials, function (i) {
+                $("#materialwork-list").append(
+                    "<tr>" +
+                        "<td><input style=\"border: none;\" readonly=\"readonly\" type=\"text\" name=\"model.WorkMaterials[" + materialIndex + "].MaterialId\" value=\"" + this.MaterialId + "\" /></td>" +
+                        "<td><input style=\"border: none;\" readonly=\"readonly\" type=\"text\" name=\"model.WorkMaterials[" + materialIndex + "].MaterialName\" value=\"" + this.MaterialName + "\" /></td>" +
+                        "<td><input style=\"border: none;\" readonly=\"readonly\" type=\"text\" name=\"model.WorkMaterials[" + materialIndex++ + "].Count\" value=\"" + this.Count + "\" /></td>" +
+                        "<td><button onclick=\"deleteRow_Func(this)\" type=\"button\">-d</button></td>" +
+                        "<td><button onclick=\"editRow_Func(this)\" data-toggle=\"modal\" data-target=\"#addMaterial_Modal\" type=\"button\">-e</button></td>" +
+                    "</tr>"
+                );
+            });
+
+            $("#workName_Input").val(material.WorkName);
+            $("#workPrice_Input").val(material.Price);
+            $("#workId_Input").val(material.Id);
+        }
+    }
+</script>
+
+<form action="/work/Index" method="post" id="work-form">
+    <div class="form-group hidden">
+        <label for="WorkId">Id</label>
+        <input id="workId_Input" type="text" class="form-control" name="model.Id">
+    </div>
+    <div class="form-group">
+        <label for="WorkName">Название услуги</label>
+        <input id="workName_Input" type="text" class="form-control" name="model.WorkName">
+    </div>
+    <div class="form-group">
+        <label for="Price">Цена</label>
+        <input id="workPrice_Input" type="text" class="form-control" name="model.Price">
+    </div>
+    <table id="materialwork-table" class="table">
+        <thead>
+            <tr><th>Id</th><th>Название материала</th><th>Количество</th><th>Удалить</th><th>Редактировать</th></tr>
+        </thead>
+        <tbody id="materialwork-list"></tbody>
+    </table>
+    <input id="outForm_Submit" type="submit" value="Сохранить" />
+</form>
+
+<script>
+    $("#outForm_Submit").click(function () {
+        var zeroIndex = 0;
+        $('#materialwork-table tr:gt(0)').each(function () {
+            var this_row = $(this);
+            $.trim(this_row.find('td:eq(0)').find('input').attr('name', "model.WorkMaterials[" + zeroIndex + "].MaterialId"));
+            $.trim(this_row.find('td:eq(1)').find('input').attr('name', "model.WorkMaterials[" + zeroIndex + "].MaterialName"));
+            $.trim(this_row.find('td:eq(2)').find('input').attr('name', "model.WorkMaterials[" + zeroIndex + "].Count"));
+            zeroIndex++;
+        });
+    });
+</script>
+
+
+
+<script>
+    $.getJSON("/material/GetAllMaterials", null, fillMaterialsSelectForm);
+
+    function fillMaterialsSelectForm(materials) {
+        $("#materialName_Select").text("");
+        $.each(materials, function (i) {
+            $("#materialName_Select").append("<option value=\"" + this.Id + "\">" + this.MaterialName + "</option>");
+        });
+    }
+</script>
+
+<div class="modal fade" id="addMaterial_Modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">Редактирование материала</h4>
+            </div>
+            <div class="modal-body">
+                <label for="MaterialName">Название материала</label>
+                <select class="form-control" name="MaterialName" id="materialName_Select"></select>
+
+                <label for="MaterialCount">Количество</label>
+                <input type="text" class="form-control" id="materialCount_Input" name="MaterialCount">
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="closeModalWindow_Button" class="btn btn-secondary" data-dismiss="modal">Закрыть окно</button>
+                <button type="button" id="addMaterial_Button" class="btn btn-primary">Добавить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+        $("#addMaterial_Button").click(function () {
+            $("#materialwork-list").append(
+                "<tr>" +
+                "<td><input style=\"border: none;\" readonly=\"readonly\" type=\"text\" name=\"model.WorkMaterials[" + materialIndex + "].MaterialId\" value=\"" + $("#materialName_Select").val() + "\" /></td>" +
+                "<td><input style=\"border: none;\" readonly=\"readonly\" type=\"text\" name=\"model.WorkMaterials[" + materialIndex + "].MaterialName\" value=\"" + $("#materialName_Select option:selected").text() + "\" /></td>" +
+                "<td><input style=\"border: none;\" readonly=\"readonly\" type=\"text\" name=\"model.WorkMaterials[" + materialIndex++ + "].Count\" value=\"" + $("#materialCount_Input").val() + "\" /></td>" +
+                "<td><button onclick=\"deleteRow_Func(this)\" type=\"button\">-d</button></td>" +
+                "<td><button onclick=\"editRow_Func(this)\" data-toggle=\"modal\" data-target=\"#addMaterial_Modal\" type=\"button\">-e</button></td>" +
+                "</tr>"
+            );
+            
+            document.getElementById('closeModalWindow_Button').disabled = false;
+        });
+    });
+</script>
+
+<button type="button" id="addMaterialWork_Button" data-toggle="modal" data-target="#addMaterial_Modal">Добавить</button>
+
+<script>
+    function deleteRow_Func(ctl) {
+        $(ctl).parents("tr").remove();
+    }
+
+    function editRow_Func(ctl) {
+        var cols = $(ctl).parents("tr").children("td");
+        var materialCount = $(cols[2]).find('input').val();
+        var materialId = $(cols[0]).find('input').val();
+
+        $("#materialCount_Input").val(materialCount);
+        $("#materialName_Select").val(materialId);
+
+        deleteRow_Func(ctl);
+
+        document.getElementById('closeModalWindow_Button').disabled = true;
+    };
+</script>
+
+<script>
+    $("#addMaterialWork_Button").click(function () {
+        $("#materialCount_Input").val("");
+        $("#materialName_Select").val("");
+    });
+</script>
+
+@* Для выделения строк таблицы *@
+<script>
+    function highlight(e) {
+        if (selected[0]) selected[0].className = '';
+        e.target.parentNode.className = 'selected';
+    }
+
+    var table = document.getElementById('materialwork-table'), selected = table.getElementsByClassName('selected');
+    table.onclick = highlight;
+</script>

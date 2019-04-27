@@ -9,23 +9,23 @@ namespace RepairWorkSoftwareDAL.ViewModel
 {
     public class OrderViewModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
 
-        public int CustomerId { get; set; }
+        public string CustomerId { get; set; }
 
         [DisplayName("ФИО Клиента")]
         public string CustomerFIO { get; set; }
 
-        public int WorkId { get; set; }
+        public string WorkId { get; set; }
 
         [DisplayName("Услуга")]
         public string WorkName { get; set; }
 
         [DisplayName("Количество")]
-        public int Count { get; set; }
+        public string Count { get; set; }
 
         [DisplayName("Сумма")]
-        public decimal Sum { get; set; }
+        public string Sum { get; set; }
 
         [DisplayName("Статус")]
         public string Status { get; set; }

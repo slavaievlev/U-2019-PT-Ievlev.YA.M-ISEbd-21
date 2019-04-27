@@ -30,7 +30,7 @@ namespace RepairWorkSoftwareServiceImplementList
                 }
                 if (source.Materials[i].MaterialName.Equals(model.MaterialName))
                 {
-                    throw new Exception("Уже есть клиент с таким ФИО");
+                    throw new Exception("Уже есть материал с таким названием");
                 }
             }
             source.Materials.Add(new Material

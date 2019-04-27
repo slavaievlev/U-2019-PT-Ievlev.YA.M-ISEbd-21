@@ -107,7 +107,7 @@ namespace RepairWorkSoftwareServiceImplementList
                     {
                         Id = source.Works[i].Id,
                         WorkName = source.Works[i].WorkName,
-                        Price = source.Works[i].Price,
+                        Price = Convert.ToString(source.Works[i].Price),
                         WorkMaterials = GetWorkMaterials(i)
                     };
                 }
@@ -125,7 +125,7 @@ namespace RepairWorkSoftwareServiceImplementList
                 {
                     Id = source.Works[i].Id,
                     WorkName = source.Works[i].WorkName,
-                    Price = source.Works[i].Price,
+                    Price = Convert.ToString(source.Works[i].Price),
                     WorkMaterials = GetWorkMaterials(i)
                 });
             }

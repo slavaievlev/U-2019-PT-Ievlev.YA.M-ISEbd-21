@@ -1,0 +1,12 @@
+﻿td {
+    cursor: pointer;
+}
+
+.selected {
+    background-color: brown;
+    color: #FFF;
+}
+
+.selected input {
+    background-color: brown;
+}

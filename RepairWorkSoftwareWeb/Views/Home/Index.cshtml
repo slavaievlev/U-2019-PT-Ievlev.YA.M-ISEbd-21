@@ -1,0 +1,114 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<h2>Заказы</h2>
+<table id="order-table" class="table">
+    <thead>
+        <tr><th>Id</th><th>ФИО клиента</th><th>Услуга</th><th>Количество</th><th>Сумма</th><th>Статус</th><th>Дата создания</th><th>Дата выполнения</th></tr>
+    </thead>
+    <tbody id="order-list"></tbody>
+</table>
+
+<button type="button" id="createOrder_Button">Создать заказ</button>
+<button type="button" id="progressOrder_Button">Отдать на выполнение</button>
+<button type="button" id="readyOrder_Button">Заказ готов</button>
+<button type="button" id="payOrder_Button">Заказ оплачен</button>
+<button type="button" id="refreshOrders_Button">Обновить</button>
+
+<script>
+    $(function () {
+        $("#progressOrder_Button").click(function () {
+            var orderid = $("tr.selected td:nth-child(1)").html();
+            $.ajax({
+                url: '/api/orderRest/progressorder/?orderid=' + orderid,
+                type: 'PUT',
+                success: function(result) {
+                    $("#refreshOrders_Button").click();
+                },
+                error: function (xhr, status, error) {
+                    alert(xhr.responseJSON.ExceptionMessage);
+                }
+            });
+        });
+    });
+
+    $(function () {
+        $("#readyOrder_Button").click(function () {
+            var orderid = $("tr.selected td:nth-child(1)").html();
+            $.ajax({
+                url: '/api/orderRest/isreadyorder/?orderid=' + orderid,
+                type: 'PUT',
+                success: function (result) {
+                    $("#refreshOrders_Button").click();
+                },
+                error: function (xhr, status, error) {
+                    alert(xhr.responseJSON.ExceptionMessage);
+                }
+            });
+        });
+    });
+
+    $(function () {
+        $("#payOrder_Button").click(function () {
+            var orderid = $("tr.selected td:nth-child(1)").html();
+            $.ajax({
+                url: '/api/orderRest/payorder/?orderid=' + orderid,
+                type: 'PUT',
+                success: function (result) {
+                    $("#refreshOrders_Button").click();
+                },
+                error: function (xhr, status, error) {
+                    alert(xhr.responseJSON.ExceptionMessage);
+                }
+            });
+        });
+    });
+
+    $(function () {
+        $("#createOrder_Button").click(function () {
+            window.open("/order/Index", "_self");
+        });
+    });
+
+    $(function () {
+        $("#refreshOrders_Button").click(function () {
+            $.getJSON("/home/GetAllOrders", null, fillList);
+        });
+    });
+
+    function fillList(orders) {
+        $("#order-list").text("");
+        $.each(orders, function (i) {
+            $("#order-list").append(
+                "<tr>" +
+                "<td>" + this.Id + "</td>" +
+                "<td>" + this.CustomerFIO + "</td>" +
+                "<td>" + this.WorkName + "</td>" +
+                "<td>" + this.Count + "</td>" +
+                "<td>" + this.Sum + "</td>" +
+                "<td>" + this.Status + "</td>" +
+                "<td>" + this.DateCreate + "</td>" +
+                "<td>" + this.DateImplement + "</td>" +
+                "</tr>"
+            );
+        });
+    }
+</script>
+
+<script>
+    window.onload = function () {
+        $("#refreshOrders_Button").click();
+    };
+</script>
+
+@* Для выделения строк таблицы *@
+<script>
+    function highlight(e) {
+        if (selected[0]) selected[0].className = '';
+        e.target.parentNode.className = 'selected';
+    }
+
+    var table = document.getElementById('order-table'), selected = table.getElementsByClassName('selected');
+    table.onclick = highlight;
+</script>
