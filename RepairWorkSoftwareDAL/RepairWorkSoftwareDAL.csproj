@@ -41,6 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BindingModel\ReposrtBindingModel.cs" />
     <Compile Include="BindingModel\CustomerBindingModel.cs" />
     <Compile Include="BindingModel\MaterialBindingModel.cs" />
     <Compile Include="BindingModel\WorkMaterialBindingModel.cs" />
@@ -51,11 +52,14 @@
     <Compile Include="Interface\ICustomerService.cs" />
     <Compile Include="Interface\IMainService.cs" />
     <Compile Include="Interface\IMaterialService.cs" />
+    <Compile Include="Interface\IReportService.cs" />
     <Compile Include="Interface\IStockService.cs" />
     <Compile Include="Interface\IWorkService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ViewModel\ClientOrdersModel.cs" />
     <Compile Include="ViewModel\CustomerViewModel.cs" />
     <Compile Include="ViewModel\MaterialViewModel.cs" />
+    <Compile Include="ViewModel\StocksLoadViewModel.cs" />
     <Compile Include="ViewModel\WorkMaterialViewModel.cs" />
     <Compile Include="ViewModel\OrderViewModel.cs" />
     <Compile Include="ViewModel\StockMaterialViewModel.cs" />

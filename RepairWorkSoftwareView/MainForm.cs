@@ -19,19 +19,21 @@ namespace RepairWorkSoftwareView
         [Dependency]
         public new IUnityContainer Container { get; set; }
 
-        private readonly IMainService service;
+        private readonly IMainService mainService;
+        private readonly IReportService reportService;
 
-        public MainForm(IMainService service)
+        public MainForm(IMainService mainService, IReportService reportService)
         {
             InitializeComponent();
-            this.service = service;
+            this.mainService = mainService;
+            this.reportService = reportService;
         }
 
         private void LoadData()
         {
             try
             {
-                List<OrderViewModel> list = service.GetList();
+                List<OrderViewModel> list = mainService.GetList();
                 if (list != null)
                 {
                     dataGridView.DataSource = list;
@@ -79,7 +81,7 @@ namespace RepairWorkSoftwareView
                 int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                 try
                 {
-                    service.TakeOrderInWork(new OrderBindingModel
+                    mainService.TakeOrderInWork(new OrderBindingModel
                     {
                         Id = id
                     });
@@ -99,7 +101,7 @@ namespace RepairWorkSoftwareView
                 int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                 try
                 {
-                    service.FinishOrder(new OrderBindingModel
+                    mainService.FinishOrder(new OrderBindingModel
                     {
                         Id = id
                     });
@@ -119,7 +121,7 @@ namespace RepairWorkSoftwareView
                 int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                 try
                 {
-                    service.PayOrder(new OrderBindingModel
+                    mainService.PayOrder(new OrderBindingModel
                     {
                         Id = id
                     });
@@ -146,6 +148,44 @@ namespace RepairWorkSoftwareView
         private void пополнитьСкладToolStripMenuItem_Click(object sender, EventArgs e)
         {
             var form = Container.Resolve<PutOnStockForm>();
+            form.ShowDialog();
+        }
+
+        private void прайсИзделийToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog
+            {
+                Filter = "doc|*.doc|docx|*.docx"
+            };
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+                try
+                {
+                    reportService.SaveProductPrice(new ReportBindingModel
+                    {
+                        FileName = sfd.FileName
+                    });
+                    MessageBox.Show("Выполнено", "Успех", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK,
+                   MessageBoxIcon.Error);
+                }
+            }
+        }
+
+        private void загруженностьСкладовToolStripMenuItem_Click(object sender, EventArgs
+       e)
+        {
+            var form = Container.Resolve<StocksLoadForm>();
+        form.ShowDialog();
+        }
+
+        private void заказыКлиентовToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = Container.Resolve<CustomersOrdersForm>();
             form.ShowDialog();
         }
     }
