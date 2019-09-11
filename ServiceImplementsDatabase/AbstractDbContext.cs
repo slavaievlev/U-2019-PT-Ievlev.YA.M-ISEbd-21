@@ -1,6 +1,7 @@
 ﻿using RepairWorkSoftwareModel;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
 using System.Text;
@@ -15,6 +16,10 @@ namespace ServiceImplementsDatabase
             Configuration.ProxyCreationEnabled = false;
             Configuration.LazyLoadingEnabled = false;
             var ensureDLLIsCopied = System.Data.Entity.SqlServer.SqlProviderServices.Instance;
+
+            var cs = ConfigurationManager.ConnectionStrings["AbstractDbContext"];
+            var sCs = cs.ConnectionString;
+            this.Database.Connection.ConnectionString = sCs;
         }
 
         public virtual DbSet<Customer> Customers { get; set; }
