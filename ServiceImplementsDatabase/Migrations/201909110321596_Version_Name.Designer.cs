@@ -7,13 +7,13 @@ namespace ServiceImplementsDatabase.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.2.0-61023")]
-    public sealed partial class FirstMigration : IMigrationMetadata
+    public sealed partial class Version_Name : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(FirstMigration));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(Version_Name));
         
         string IMigrationMetadata.Id
         {
-            get { return "201903231012047_FirstMigration"; }
+            get { return "201909110321596_Version_Name"; }
         }
         
         string IMigrationMetadata.Source

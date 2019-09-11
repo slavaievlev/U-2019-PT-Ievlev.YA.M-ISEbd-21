@@ -68,6 +68,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -84,9 +85,9 @@
     <Compile Include="Implementations\ReportServiceDB.cs" />
     <Compile Include="Implementations\StockServiceDB.cs" />
     <Compile Include="Implementations\WorkServiceDB.cs" />
-    <Compile Include="Migrations\201903231012047_FirstMigration.cs" />
-    <Compile Include="Migrations\201903231012047_FirstMigration.Designer.cs">
-      <DependentUpon>201903231012047_FirstMigration.cs</DependentUpon>
+    <Compile Include="Migrations\201909110321596_Version_Name.cs" />
+    <Compile Include="Migrations\201909110321596_Version_Name.Designer.cs">
+      <DependentUpon>201909110321596_Version_Name.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -113,8 +114,8 @@
     <None Include="Resources\TIMCYR.TTF" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201903231012047_FirstMigration.resx">
-      <DependentUpon>201903231012047_FirstMigration.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201909110321596_Version_Name.resx">
+      <DependentUpon>201909110321596_Version_Name.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
