@@ -41,10 +41,10 @@
             this.заказыКлиентовToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.buttonOrderAdd = new System.Windows.Forms.Button();
-            this.buttonOrderInProgress = new System.Windows.Forms.Button();
-            this.buttonOrderIsReady = new System.Windows.Forms.Button();
             this.buttonOrderPay = new System.Windows.Forms.Button();
             this.buttonUpdate = new System.Windows.Forms.Button();
+            this.запускРаботToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.исполнителиToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripMain.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -55,7 +55,8 @@
             this.menuStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.справочникиToolStripMenuItem,
             this.пополнитьСкладToolStripMenuItem,
-            this.отчетыToolStripMenuItem});
+            this.отчетыToolStripMenuItem,
+            this.запускРаботToolStripMenuItem});
             this.menuStripMain.Location = new System.Drawing.Point(0, 0);
             this.menuStripMain.Name = "menuStripMain";
             this.menuStripMain.Size = new System.Drawing.Size(1303, 28);
@@ -68,7 +69,8 @@
             this.клиентыToolStripMenuItem,
             this.компонентыToolStripMenuItem,
             this.изделияToolStripMenuItem,
-            this.складыToolStripMenuItem});
+            this.складыToolStripMenuItem,
+            this.исполнителиToolStripMenuItem});
             this.справочникиToolStripMenuItem.Name = "справочникиToolStripMenuItem";
             this.справочникиToolStripMenuItem.Size = new System.Drawing.Size(117, 24);
             this.справочникиToolStripMenuItem.Text = "Справочники";
@@ -159,26 +161,6 @@
             this.buttonOrderAdd.UseVisualStyleBackColor = true;
             this.buttonOrderAdd.Click += new System.EventHandler(this.ButtonOrderAdd_Click);
             // 
-            // buttonOrderInProgress
-            // 
-            this.buttonOrderInProgress.Location = new System.Drawing.Point(1136, 125);
-            this.buttonOrderInProgress.Name = "buttonOrderInProgress";
-            this.buttonOrderInProgress.Size = new System.Drawing.Size(155, 55);
-            this.buttonOrderInProgress.TabIndex = 3;
-            this.buttonOrderInProgress.Text = "Отдать на выполнение";
-            this.buttonOrderInProgress.UseVisualStyleBackColor = true;
-            this.buttonOrderInProgress.Click += new System.EventHandler(this.ButtonOrderInProgress_Click);
-            // 
-            // buttonOrderIsReady
-            // 
-            this.buttonOrderIsReady.Location = new System.Drawing.Point(1136, 186);
-            this.buttonOrderIsReady.Name = "buttonOrderIsReady";
-            this.buttonOrderIsReady.Size = new System.Drawing.Size(155, 55);
-            this.buttonOrderIsReady.TabIndex = 4;
-            this.buttonOrderIsReady.Text = "Заказ готов";
-            this.buttonOrderIsReady.UseVisualStyleBackColor = true;
-            this.buttonOrderIsReady.Click += new System.EventHandler(this.ButtonOrderIsReady_Click);
-            // 
             // buttonOrderPay
             // 
             this.buttonOrderPay.Location = new System.Drawing.Point(1136, 247);
@@ -199,6 +181,20 @@
             this.buttonUpdate.UseVisualStyleBackColor = true;
             this.buttonUpdate.Click += new System.EventHandler(this.ButtonUpdate_Click);
             // 
+            // запускРаботToolStripMenuItem
+            // 
+            this.запускРаботToolStripMenuItem.Name = "запускРаботToolStripMenuItem";
+            this.запускРаботToolStripMenuItem.Size = new System.Drawing.Size(114, 24);
+            this.запускРаботToolStripMenuItem.Text = "Запуск работ";
+            this.запускРаботToolStripMenuItem.Click += new System.EventHandler(this.ЗапускРаботToolStripMenuItem_Click);
+            // 
+            // исполнителиToolStripMenuItem
+            // 
+            this.исполнителиToolStripMenuItem.Name = "исполнителиToolStripMenuItem";
+            this.исполнителиToolStripMenuItem.Size = new System.Drawing.Size(224, 26);
+            this.исполнителиToolStripMenuItem.Text = "Исполнители";
+            this.исполнителиToolStripMenuItem.Click += new System.EventHandler(this.ИсполнителиToolStripMenuItem_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -206,8 +202,6 @@
             this.ClientSize = new System.Drawing.Size(1303, 450);
             this.Controls.Add(this.buttonUpdate);
             this.Controls.Add(this.buttonOrderPay);
-            this.Controls.Add(this.buttonOrderIsReady);
-            this.Controls.Add(this.buttonOrderInProgress);
             this.Controls.Add(this.buttonOrderAdd);
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.menuStripMain);
@@ -231,8 +225,6 @@
         private System.Windows.Forms.ToolStripMenuItem изделияToolStripMenuItem;
         private System.Windows.Forms.DataGridView dataGridView;
         private System.Windows.Forms.Button buttonOrderAdd;
-        private System.Windows.Forms.Button buttonOrderInProgress;
-        private System.Windows.Forms.Button buttonOrderIsReady;
         private System.Windows.Forms.Button buttonOrderPay;
         private System.Windows.Forms.Button buttonUpdate;
         private System.Windows.Forms.ToolStripMenuItem складыToolStripMenuItem;
@@ -241,6 +233,8 @@
         private System.Windows.Forms.ToolStripMenuItem прайзИзделийToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem загруженностьСкладовToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem заказыКлиентовToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem запускРаботToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem исполнителиToolStripMenuItem;
     }
 }
 

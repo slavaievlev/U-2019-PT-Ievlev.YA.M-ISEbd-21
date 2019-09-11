@@ -1,5 +1,7 @@
 ﻿using RepairWorkSoftwareDAL.BindingModel;
 using RepairWorkSoftwareDAL.Interface;
+using RepairWorkSoftwareDAL.ViewModel;
+using RepairWorkSoftwareRestAPI.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,10 +14,13 @@ namespace RepairWorkSoftwareRestAPI.Controllers
     public class MainController : ApiController
     {
         private readonly IMainService mainService;
+        private readonly IImplementerService implementerService;
 
-        public MainController(IMainService service)
+        public MainController(IMainService mainService,
+            IImplementerService implementerService)
         {
-            mainService = service;
+            this.mainService = mainService;
+            this.implementerService = implementerService;
         }
 
         [HttpGet]
@@ -36,21 +41,24 @@ namespace RepairWorkSoftwareRestAPI.Controllers
         }
 
         [HttpPost]
-        public void TakeOrderInWork(OrderBindingModel model)
-        {
-            mainService.TakeOrderInWork(model);
-        }
-
-        [HttpPost]
-        public void FinishOrder(OrderBindingModel model)
-        {
-            mainService.FinishOrder(model);
-        }
-
-        [HttpPost]
         public void PayOrder(OrderBindingModel model)
         {
             mainService.PayOrder(model);
+        }
+
+        [HttpPost]
+        public void StartWork()
+        {
+            List<OrderViewModel> orders = mainService.GetFreeOrders();
+            foreach (var order in orders)
+            {
+                ImplementerViewModel impl = implementerService.GetFreeWorker();
+                if (impl == null)
+                {
+                    throw new Exception("Нет сотрудников");
+                }
+                new WorkImplementer(mainService, implementerService, impl.Id, order.Id);
+            }
         }
 
         [HttpPost]

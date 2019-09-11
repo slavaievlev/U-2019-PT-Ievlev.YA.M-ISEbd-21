@@ -173,5 +173,27 @@ namespace RepairWorkSoftwareView
             var form = new CustomersOrdersForm();
             form.ShowDialog();
         }
+
+        private void ЗапускРаботToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                APIClient.PostRequest<int?, bool>("api/Main/StartWork", null);
+                MessageBox.Show("Выполнено", "Успех", MessageBoxButtons.OK,
+               MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Ошибка", MessageBoxButtons.OK,
+               MessageBoxIcon.Error);
+            }
+
+        }
+
+        private void ИсполнителиToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = new ImplementersForm();
+            form.ShowDialog();
+        }
     }
 }

@@ -28,5 +28,8 @@ namespace RepairWorkSoftwareModel
         public virtual Customer Customer { get; set; }
 
         public virtual Work Work { get; set; }
+
+        public int? ImplementerId { get; set; }
+        public virtual Implementer Implementer { get; set; }
     }
 }

@@ -21,5 +21,7 @@ namespace RepairWorkSoftwareDAL.Interface
         void PayOrder(OrderBindingModel model);
 
         void PutMaterialOnStock(StockMaterialBindingModel model);
+
+        List<OrderViewModel> GetFreeOrders();
     }
 }

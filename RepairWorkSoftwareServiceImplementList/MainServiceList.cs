@@ -159,5 +159,10 @@ namespace RepairWorkSoftwareServiceImplementList
                 });
             }
         }
+
+        public List<OrderViewModel> GetFreeOrders()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

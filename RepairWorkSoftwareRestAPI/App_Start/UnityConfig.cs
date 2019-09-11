@@ -60,6 +60,8 @@ namespace RepairWorkSoftwareRestAPI
                 HierarchicalLifetimeManager());
             container.RegisterType<IReportService, ReportServiceDB>(new
                 HierarchicalLifetimeManager());
+            container.RegisterType<IImplementerService, ImplementerServiceDB>(new
+                HierarchicalLifetimeManager());
         }
     }
 }
