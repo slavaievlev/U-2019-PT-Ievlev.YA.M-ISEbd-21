@@ -9,19 +9,19 @@ using System.Web.Http;
 
 namespace RepairWorkSoftwareRestAPI.Controllers
 {
-    public class CustomerController : ApiController
+    public class MaterialController : ApiController
     {
-        private readonly ICustomerService customerService;
+        private readonly IMaterialService materialService;
 
-        public CustomerController(ICustomerService service)
+        public MaterialController(IMaterialService materialService)
         {
-            customerService = service;
+            this.materialService = materialService;
         }
 
         [HttpGet]
         public IHttpActionResult GetList()
         {
-            var list = customerService.GetList();
+            var list = materialService.GetList();
             if (list == null)
             {
                 InternalServerError(new Exception("Нет данных"));
@@ -32,7 +32,7 @@ namespace RepairWorkSoftwareRestAPI.Controllers
         [HttpGet]
         public IHttpActionResult Get(int id)
         {
-            var element = customerService.GetElement(id);
+            var element = materialService.GetElement(id);
             if (element == null)
             {
                 InternalServerError(new Exception("Нет данных"));
@@ -41,21 +41,21 @@ namespace RepairWorkSoftwareRestAPI.Controllers
         }
 
         [HttpPost]
-        public void AddElement(CustomerBindingModel model)
+        public void AddElement(MaterialBindingModel model)
         {
-            customerService.AddElement(model);
+            materialService.AddElement(model);
         }
 
         [HttpPost]
-        public void UpdElement(CustomerBindingModel model)
+        public void UpdElement(MaterialBindingModel model)
         {
-            customerService.UpdElement(model);
+            materialService.UpdElement(model);
         }
 
         [HttpPost]
-        public void DelElement(CustomerBindingModel model)
+        public void DelElement(MaterialBindingModel model)
         {
-            customerService.DelElement(model.Id);
+            materialService.DelElement(model.Id);
         }
     }
 }

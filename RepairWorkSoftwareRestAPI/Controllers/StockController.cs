@@ -9,19 +9,19 @@ using System.Web.Http;
 
 namespace RepairWorkSoftwareRestAPI.Controllers
 {
-    public class CustomerController : ApiController
+    public class StockController : ApiController
     {
-        private readonly ICustomerService customerService;
+        private readonly IStockService stockService;
 
-        public CustomerController(ICustomerService service)
+        public StockController(IStockService stockService)
         {
-            customerService = service;
+            this.stockService = stockService;
         }
 
         [HttpGet]
         public IHttpActionResult GetList()
         {
-            var list = customerService.GetList();
+            var list = stockService.GetList();
             if (list == null)
             {
                 InternalServerError(new Exception("Нет данных"));
@@ -32,7 +32,7 @@ namespace RepairWorkSoftwareRestAPI.Controllers
         [HttpGet]
         public IHttpActionResult Get(int id)
         {
-            var element = customerService.GetElement(id);
+            var element = stockService.GetElement(id);
             if (element == null)
             {
                 InternalServerError(new Exception("Нет данных"));
@@ -41,21 +41,21 @@ namespace RepairWorkSoftwareRestAPI.Controllers
         }
 
         [HttpPost]
-        public void AddElement(CustomerBindingModel model)
+        public void AddElement(StockBindingModel model)
         {
-            customerService.AddElement(model);
+            stockService.AddElement(model);
         }
 
         [HttpPost]
-        public void UpdElement(CustomerBindingModel model)
+        public void UpdElement(StockBindingModel model)
         {
-            customerService.UpdElement(model);
+            stockService.UpdElement(model);
         }
 
         [HttpPost]
-        public void DelElement(CustomerBindingModel model)
+        public void DelElement(StockBindingModel model)
         {
-            customerService.DelElement(model.Id);
+            stockService.DelElement(model.Id);
         }
     }
 }
