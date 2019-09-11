@@ -16,24 +16,16 @@ namespace RepairWorkSoftwareView
 {
     public partial class MainForm : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
-
-        private readonly IMainService mainService;
-        private readonly IReportService reportService;
-
-        public MainForm(IMainService mainService, IReportService reportService)
+        public MainForm()
         {
             InitializeComponent();
-            this.mainService = mainService;
-            this.reportService = reportService;
         }
 
         private void LoadData()
         {
             try
             {
-                List<OrderViewModel> list = mainService.GetList();
+                List<OrderViewModel> list = APIClient.GetRequest<List<OrderViewModel>>("api/Main/GetList");
                 if (list != null)
                 {
                     dataGridView.DataSource = list;
@@ -51,25 +43,25 @@ namespace RepairWorkSoftwareView
 
         private void КлиентыToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<CustomersForm>();
+            var form = new CustomersForm();
             form.ShowDialog();
         }
 
         private void КомпонентыToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<MaterialsForm>();
+            var form = new MaterialsForm();
             form.ShowDialog();
         }
 
         private void ИзделияToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<WorksForm>();
+            var form = new WorksForm();
             form.ShowDialog();
         }
 
         private void ButtonOrderAdd_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<CreateOrderForm>();
+            var form = new CreateOrderForm();
             form.ShowDialog();
             LoadData();
         }
@@ -81,10 +73,8 @@ namespace RepairWorkSoftwareView
                 int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                 try
                 {
-                    mainService.TakeOrderInWork(new OrderBindingModel
-                    {
-                        Id = id
-                    });
+                    APIClient.PostRequest<OrderBindingModel, bool>("api/Main/TakeOrderInWork", 
+                        new OrderBindingModel { Id = id });
                     LoadData();
                 }
                 catch (Exception ex)
@@ -101,10 +91,8 @@ namespace RepairWorkSoftwareView
                 int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                 try
                 {
-                    mainService.FinishOrder(new OrderBindingModel
-                    {
-                        Id = id
-                    });
+                    APIClient.PostRequest<OrderBindingModel, bool>("api/Main/FinishOrder",
+                        new OrderBindingModel { Id = id });
                     LoadData();
                 }
                 catch (Exception ex)
@@ -121,10 +109,8 @@ namespace RepairWorkSoftwareView
                 int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                 try
                 {
-                    mainService.PayOrder(new OrderBindingModel
-                    {
-                        Id = id
-                    });
+                    APIClient.PostRequest<OrderBindingModel, bool>("api/Main/PayOrder",
+                        new OrderBindingModel { Id = id });
                     LoadData();
                 }
                 catch (Exception ex)
@@ -141,13 +127,13 @@ namespace RepairWorkSoftwareView
 
         private void складыToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<StocksForm>();
+            var form = new StocksForm();
             form.ShowDialog();
         }
 
         private void пополнитьСкладToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<PutOnStockForm>();
+            var form = new PutOnStockForm();
             form.ShowDialog();
         }
 
@@ -161,10 +147,9 @@ namespace RepairWorkSoftwareView
             {
                 try
                 {
-                    reportService.SaveProductPrice(new ReportBindingModel
-                    {
-                        FileName = sfd.FileName
-                    });
+                    APIClient.PostRequest<ReportBindingModel, bool>("api/Main/SaveProductPrice",
+                        new ReportBindingModel { FileName = sfd.FileName });
+
                     MessageBox.Show("Выполнено", "Успех", MessageBoxButtons.OK,
                     MessageBoxIcon.Information);
                 }
@@ -179,13 +164,13 @@ namespace RepairWorkSoftwareView
         private void загруженностьСкладовToolStripMenuItem_Click(object sender, EventArgs
        e)
         {
-            var form = Container.Resolve<StocksLoadForm>();
+            var form = new StocksLoadForm();
         form.ShowDialog();
         }
 
         private void заказыКлиентовToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<CustomersOrdersForm>();
+            var form = new CustomersOrdersForm();
             form.ShowDialog();
         }
     }

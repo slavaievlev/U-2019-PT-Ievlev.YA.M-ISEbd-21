@@ -16,29 +16,17 @@ namespace RepairWorkSoftwareView
 {
     public partial class CreateOrderForm : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
-
-        private readonly ICustomerService customerService;
-
-        private readonly IWorkService workService;
-
-        private readonly IMainService mainService;
-
-        public CreateOrderForm(ICustomerService customerService,
-            IWorkService workService, IMainService mainService)
+        public CreateOrderForm()
         {
             InitializeComponent();
-            this.customerService = customerService;
-            this.workService = workService;
-            this.mainService = mainService;
         }
 
         private void CreateOrderForm_Load(object sender, EventArgs e)
         {
             try
             {
-                List<CustomerViewModel> customerList = customerService.GetList();
+                List<CustomerViewModel> customerList = APIClient.
+                    GetRequest<List<CustomerViewModel>>("api/Customer/GetList");
                 if (customerList != null)
                 {
                     comboBoxCustomer.DisplayMember = "CustomerFIO";
@@ -47,7 +35,7 @@ namespace RepairWorkSoftwareView
                     comboBoxCustomer.SelectedItem = null;
                 }
 
-                List<WorkViewModel> workList = workService.GetList();
+                List<WorkViewModel> workList = APIClient.GetRequest<List<WorkViewModel>>("api/Work/GetList");
                 if (customerList != null)
                 {
                     comboBoxWork.DisplayMember = "WorkName";
@@ -84,8 +72,7 @@ namespace RepairWorkSoftwareView
 
             try
             {
-                mainService.CreateOrder(new OrderBindingModel
-                {
+                APIClient.PostRequest<OrderBindingModel, bool>("api/Main/CreateOrder", new OrderBindingModel {
                     CustomerId = Convert.ToInt32(comboBoxCustomer.SelectedValue),
                     WorkId = Convert.ToInt32(comboBoxWork.SelectedValue),
                     Count = Convert.ToInt32(textBoxCountInput.Text),
@@ -116,9 +103,8 @@ namespace RepairWorkSoftwareView
                 try
                 {
                     int id = Convert.ToInt32(comboBoxWork.SelectedValue);
-                    WorkViewModel work = workService.GetElement(id);
+                    WorkViewModel work = APIClient.GetRequest<WorkViewModel>("api/Work/Get/" + id);
                     int count = Convert.ToInt32(textBoxCountInput.Text);
-                    //textBoxSumInput.Text = (count * work.Price).ToString();
                     int result = Convert.ToInt32(count * work.Price);
                     textBoxSumInput.Text = result.ToString();
                 }

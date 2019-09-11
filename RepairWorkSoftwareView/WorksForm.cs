@@ -1,4 +1,5 @@
-﻿using RepairWorkSoftwareDAL.Interface;
+﻿using RepairWorkSoftwareDAL.BindingModel;
+using RepairWorkSoftwareDAL.Interface;
 using RepairWorkSoftwareDAL.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -15,15 +16,9 @@ namespace RepairWorkSoftwareView
 {
     public partial class WorksForm : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
-
-        private readonly IWorkService service;
-
-        public WorksForm(IWorkService service)
+        public WorksForm()
         {
             InitializeComponent();
-            this.service = service;
         }
 
         private void WorksForm_Load(object sender, EventArgs e)
@@ -35,7 +30,7 @@ namespace RepairWorkSoftwareView
         {
             try
             {
-                List<WorkViewModel> list = service.GetList();
+                List<WorkViewModel> list = APIClient.GetRequest<List<WorkViewModel>>("api/Work/GetList");
                 if (list != null)
                 {
                     dataGridView.DataSource = list;
@@ -51,7 +46,7 @@ namespace RepairWorkSoftwareView
 
         private void ButtonAdd_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<WorkEditForm>();
+            var form = new WorkEditForm();
             if (form.ShowDialog() == DialogResult.OK)
             {
                 LoadData();
@@ -62,7 +57,7 @@ namespace RepairWorkSoftwareView
         {
             if (dataGridView.SelectedRows.Count == 1)
             {
-                var form = Container.Resolve<WorkEditForm>();
+                var form = new WorkEditForm();
                 form.Id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                 if (form.ShowDialog() == DialogResult.OK)
                 {
@@ -80,7 +75,11 @@ namespace RepairWorkSoftwareView
                     int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                     try
                     {
-                        service.DelElement(id);
+                        APIClient.PostRequest<WorkBindingModel, bool>("api/Work/DelElement",
+                        new WorkBindingModel
+                        {
+                            Id = id
+                        });
                     }
                     catch (Exception ex)
                     {

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Reporting.WinForms;
 using RepairWorkSoftwareDAL.BindingModel;
 using RepairWorkSoftwareDAL.Interface;
+using RepairWorkSoftwareDAL.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,15 +17,9 @@ namespace RepairWorkSoftwareView
 {
     public partial class CustomersOrdersForm : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
-
-        private readonly IReportService service;
-
-        public CustomersOrdersForm(IReportService service)
+        public CustomersOrdersForm()
         {
             InitializeComponent();
-            this.service = service;
         }
 
         private void CustomersOrdersForm_Load(object sender, EventArgs e)
@@ -48,11 +43,12 @@ namespace RepairWorkSoftwareView
                 " по " +
                dateTimePickerTo.Value.ToShortDateString());
                 reportViewer.LocalReport.SetParameters(parameter);
-                var dataSource = service.GetClientOrders(new ReportBindingModel
-                {
-                    DateFrom = dateTimePickerFrom.Value,
-                    DateTo = dateTimePickerTo.Value
-                });
+                var dataSource = APIClient.PostRequest<ReportBindingModel, ClientOrdersModel>("api/Report/GetClientOrders",
+                        new ReportBindingModel
+                        {
+                            DateFrom = dateTimePickerFrom.Value,
+                            DateTo = dateTimePickerTo.Value
+                        });
 
                 ReportDataSource source = new ReportDataSource("DataSetOrders", dataSource);
                 source.Name = "DataSetOrders";
@@ -81,12 +77,14 @@ namespace RepairWorkSoftwareView
             {
                 try
                 {
-                    service.SaveClientOrders(new ReportBindingModel
-                    {
-                        FileName = sfd.FileName,
-                        DateFrom = dateTimePickerFrom.Value,
-                        DateTo = dateTimePickerTo.Value
-                    });
+                    APIClient.PostRequest<ReportBindingModel, bool>("api/Report/SaveClientOrders",
+                        new ReportBindingModel
+                        {
+                            FileName = sfd.FileName,
+                            DateFrom = dateTimePickerFrom.Value,
+                            DateTo = dateTimePickerTo.Value
+                        });
+
                     MessageBox.Show("Выполнено", "Успех", MessageBoxButtons.OK,
                    MessageBoxIcon.Information);
                 }

@@ -54,7 +54,7 @@ namespace RepairWorkSoftwareRestAPI.Controllers
         }
 
         [HttpPost]
-        public void PutComponentOnStock(StockMaterialBindingModel model)
+        public void PutMaterialOnStock(StockMaterialBindingModel model)
         {
             mainService.PutMaterialOnStock(model);
         }

@@ -16,21 +16,15 @@ namespace RepairWorkSoftwareView
 {
     public partial class WorkEditForm : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
-
         public int Id { set { id = value; } }
-
-        private readonly IWorkService service;
 
         private int? id;
 
         private List<WorkMaterialViewModel> workMaterials;
 
-        public WorkEditForm(IWorkService service)
+        public WorkEditForm()
         {
             InitializeComponent();
-            this.service = service;
         }
 
         private void WorkEditForm_Load(object sender, EventArgs e)
@@ -39,7 +33,7 @@ namespace RepairWorkSoftwareView
             {
                 try
                 {
-                    WorkViewModel view = service.GetElement(id.Value);
+                    WorkViewModel view = APIClient.GetRequest<WorkViewModel>("api/Work/Get/" + id);
                     if (view != null)
                     {
                         textBoxNameInput.Text = view.WorkName;
@@ -81,7 +75,7 @@ namespace RepairWorkSoftwareView
 
         private void ButtonAdd_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<WorkMaterialAddForm>();
+            var form = new WorkMaterialAddForm();
             if (form.ShowDialog() == DialogResult.OK)
             {
                 if (form.Model != null)
@@ -100,7 +94,7 @@ namespace RepairWorkSoftwareView
         {
             if (dataGridView.SelectedRows.Count == 1)
             {
-                var form = Container.Resolve<WorkMaterialAddForm>();
+                var form = new WorkMaterialAddForm();
                 form.Model = workMaterials[dataGridView.SelectedRows[0].Cells[0].RowIndex];
                 if (form.ShowDialog() == DialogResult.OK)
                 {
@@ -170,22 +164,24 @@ namespace RepairWorkSoftwareView
 
                 if (id.HasValue)
                 {
-                    service.UpdElement(new WorkBindingModel
-                    {
-                        Id = id.Value,
-                        WorkName = textBoxNameInput.Text,
-                        Price = Convert.ToInt32(textBoxPriceInput.Text),
-                        WorkMaterials = workMaterialBM
-                    });
+                    APIClient.PostRequest<WorkBindingModel, bool>("api/Work/UpdElement",
+                        new WorkBindingModel
+                        {
+                            Id = id.Value,
+                            WorkName = textBoxNameInput.Text,
+                            Price = Convert.ToInt32(textBoxPriceInput.Text),
+                            WorkMaterials = workMaterialBM
+                        });
                 }
                 else
                 {
-                    service.AddElement(new WorkBindingModel
-                    {
-                        WorkName = textBoxNameInput.Text,
-                        Price = Convert.ToInt32(textBoxPriceInput.Text),
-                        WorkMaterials = workMaterialBM
-                    });
+                    APIClient.PostRequest<WorkBindingModel, bool>("api/Work/AddElement",
+                        new WorkBindingModel
+                        {
+                            WorkName = textBoxNameInput.Text,
+                            Price = Convert.ToInt32(textBoxPriceInput.Text),
+                            WorkMaterials = workMaterialBM
+                        });
                 }
 
                 MessageBox.Show("Сохранение прошло успешно", "Сообщение", MessageBoxButtons.OK, MessageBoxIcon.Information);

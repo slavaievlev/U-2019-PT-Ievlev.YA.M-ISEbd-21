@@ -16,19 +16,13 @@ namespace RepairWorkSoftwareView
 {
     public partial class MaterialEditForm : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
-
         public int Id { set { id = value; } }
-
-        private readonly IMaterialService service;
 
         private int? id;
 
-        public MaterialEditForm(IMaterialService service)
+        public MaterialEditForm()
         {
             InitializeComponent();
-            this.service = service;
         }
 
         private void ButtonSave_Click(object sender, EventArgs e)
@@ -43,18 +37,20 @@ namespace RepairWorkSoftwareView
             {
                 if (id.HasValue)
                 {
-                    service.UpdElement(new MaterialBindingModel
-                    {
-                        Id = id.Value,
-                        MaterialName = textBoxNameInput.Text
-                    });
+                    APIClient.PostRequest<MaterialBindingModel, bool>("api/Material/UpdElement",
+                        new MaterialBindingModel
+                        {
+                            Id = id.Value,
+                            MaterialName = textBoxNameInput.Text
+                        });
                 }
                 else
                 {
-                    service.AddElement(new MaterialBindingModel
-                    {
-                        MaterialName = textBoxNameInput.Text
-                    });
+                    APIClient.PostRequest<MaterialBindingModel, bool>("api/Material/AddElement",
+                        new MaterialBindingModel
+                        {
+                            MaterialName = textBoxNameInput.Text
+                        });
                 }
 
                 MessageBox.Show("Сохранение прошло успешно", "Сообщение", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -73,7 +69,7 @@ namespace RepairWorkSoftwareView
             {
                 try
                 {
-                    MaterialViewModel view = service.GetElement(id.Value);
+                    MaterialViewModel view = APIClient.GetRequest<MaterialViewModel>("api/Material/Get/" + id);
                     if (view != null)
                     {
                         textBoxNameInput.Text = view.MaterialName;

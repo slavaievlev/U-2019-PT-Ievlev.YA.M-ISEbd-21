@@ -16,28 +16,15 @@ namespace RepairWorkSoftwareView
 {
     public partial class PutOnStockForm : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
-
-        private readonly IStockService stockService;
-
-        private readonly IMaterialService materialService;
-
-        private readonly IMainService mainService;
-
-        public PutOnStockForm(IStockService stockService, IMaterialService materialService,
-            IMainService mainService)
+        public PutOnStockForm()
         {
             InitializeComponent();
-            this.stockService = stockService;
-            this.materialService = materialService;
-            this.mainService = mainService;
         }
         private void FormPutOnStock_Load(object sender, EventArgs e)
         {
             try
             {
-                List<MaterialViewModel> materialList = materialService.GetList();
+                List<MaterialViewModel> materialList = APIClient.GetRequest<List<MaterialViewModel>>("api/Material/GetList");
                 if (materialList != null)
                 {
                     comboBoxMaterial.DisplayMember = "MaterialName";
@@ -45,7 +32,7 @@ namespace RepairWorkSoftwareView
                     comboBoxMaterial.DataSource = materialList;
                     comboBoxMaterial.SelectedItem = null;
                 }
-                List<StockViewModel> stockList = stockService.GetList();
+                List<StockViewModel> stockList = APIClient.GetRequest<List<StockViewModel>>("api/Stock/GetList");
                 if (stockList != null)
                 {
                     comboBoxStock.DisplayMember = "StockName";
@@ -82,12 +69,15 @@ namespace RepairWorkSoftwareView
             }
             try
             {
-                mainService.PutMaterialOnStock(new StockMaterialBindingModel
-                {
-                    MaterialId = Convert.ToInt32(comboBoxMaterial.SelectedValue),
-                    StockId = Convert.ToInt32(comboBoxStock.SelectedValue),
-                    Count = Convert.ToInt32(textBoxCount.Text)
-                });
+                APIClient.PostRequest<StockMaterialBindingModel, bool>("api/Main/PutMaterialOnStock",
+                        new StockMaterialBindingModel
+                        {
+                            MaterialId = Convert.ToInt32(comboBoxMaterial.SelectedValue),
+                            StockId = Convert.ToInt32(comboBoxStock.SelectedValue),
+                            Count = Convert.ToInt32(textBoxCount.Text)
+                        });
+
+
                 MessageBox.Show("Сохранение прошло успешно", "Сообщение",
                     MessageBoxButtons.OK, MessageBoxIcon.Information);
                 DialogResult = DialogResult.OK;

@@ -16,19 +16,13 @@ namespace RepairWorkSoftwareView
 {
     public partial class StockForm : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
-
         public int Id { set { id = value; } }
-
-        private readonly IStockService service;
 
         private int? id;
 
-        public StockForm(IStockService service)
+        public StockForm()
         {
             InitializeComponent();
-            this.service = service;
         }
         private void StockForm_Load(object sender, EventArgs e)
         {
@@ -36,7 +30,7 @@ namespace RepairWorkSoftwareView
             {
                 try
                 {
-                    StockViewModel view = service.GetElement(id.Value);
+                    StockViewModel view = APIClient.GetRequest<StockViewModel>("api/Stock/Get/" + id);
                     if (view != null)
                     {
                      textBoxName.Text = view.StockName;
@@ -67,18 +61,20 @@ namespace RepairWorkSoftwareView
             {
                 if (id.HasValue)
                 {
-                    service.UpdElement(new StockBindingModel
-                    {
-                        Id = id.Value,
-                        StockName = textBoxName.Text
-                    });
+                    APIClient.PostRequest<StockBindingModel, bool>("api/Stock/UpdElement",
+                        new StockBindingModel
+                        {
+                            Id = id.Value,
+                            StockName = textBoxName.Text
+                        });
                 }
                 else
                 {
-                    service.AddElement(new StockBindingModel
-                    {
-                        StockName = textBoxName.Text
-                    });
+                    APIClient.PostRequest<StockBindingModel, bool>("api/Stock/AddElement",
+                        new StockBindingModel
+                        {
+                            StockName = textBoxName.Text
+                        });
                 }
                 MessageBox.Show("Сохранение прошло успешно", "Сообщение",
                MessageBoxButtons.OK, MessageBoxIcon.Information);

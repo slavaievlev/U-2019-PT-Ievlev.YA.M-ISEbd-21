@@ -62,8 +62,7 @@ namespace ServiceImplementsDatabase.Implementations
             {
                 try
                 {
-                    Order element = context.Orders.FirstOrDefault(rec => rec.Id ==
-                   model.Id);
+                    Order element = context.Orders.FirstOrDefault(rec => rec.Id == model.Id);
                     if (element == null)
                     {
                         throw new Exception("Элемент не найден");
@@ -72,13 +71,12 @@ namespace ServiceImplementsDatabase.Implementations
                     {
                         throw new Exception("Заказ не в статусе \"Принят\"");
                     }
-                    var productComponents = context.WorkMaterials.Include(rec => rec.Material).Where(rec => rec.WorkId == element.WorkId);                  
+                    var productComponents = context.WorkMaterials.Include(rec => rec.Material).Where(rec => rec.WorkId == element.WorkId).ToList();                  
 
                     foreach (var productComponent in productComponents)
                     {
                         int countOnStocks = productComponent.Count * element.Count;
-                        var stockComponents = context.StockMaterials.Where(rec =>
-                        rec.MaterialId == productComponent.MaterialId);
+                        var stockComponents = context.StockMaterials.Where(rec => rec.MaterialId == productComponent.MaterialId).ToList();
                         foreach (var stockComponent in stockComponents)
                         {
                             if (stockComponent.Count >= countOnStocks)

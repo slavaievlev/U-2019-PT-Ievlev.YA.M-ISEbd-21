@@ -21,26 +21,11 @@ namespace RepairWorkSoftwareView
         [STAThread]
         static void Main()
         {
-            var container = BuildUnityContainer();
+            APIClient.Connect();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(container.Resolve<MainForm>());
-        }
-
-        public static IUnityContainer BuildUnityContainer()
-        {
-            var currentContainer = new UnityContainer();
-            currentContainer.RegisterType<ICustomerService, CustomerServiceDB>(new HierarchicalLifetimeManager());
-            currentContainer.RegisterType<IMaterialService, MaterialServiceDB>(new HierarchicalLifetimeManager());
-            currentContainer.RegisterType<IWorkService, WorkServiceDB>(new HierarchicalLifetimeManager());
-            currentContainer.RegisterType<IMainService, MainServiceDB>(new HierarchicalLifetimeManager());
-            currentContainer.RegisterType<IStockService, StockServiceDB>(new HierarchicalLifetimeManager());
-            currentContainer.RegisterType<IReportService, ReportServiceDB>(new HierarchicalLifetimeManager());
-
-            currentContainer.RegisterType<DbContext, AbstractDbContext>(new HierarchicalLifetimeManager());
-
-            return currentContainer;
+            Application.Run(new MainForm());
         }
     }
 }

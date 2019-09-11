@@ -1,4 +1,5 @@
-﻿using RepairWorkSoftwareDAL.Interface;
+﻿using RepairWorkSoftwareDAL.BindingModel;
+using RepairWorkSoftwareDAL.Interface;
 using RepairWorkSoftwareDAL.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -15,20 +16,14 @@ namespace RepairWorkSoftwareView
 {
     public partial class StocksForm : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
-
-        private readonly IStockService service;
-
-        public StocksForm(IStockService service)
+        public StocksForm()
         {
             InitializeComponent();
-            this.service = service;
         }
 
         private void ButtonCustomerAdd_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<StockForm>();
+            var form = new StockForm();
             if (form.ShowDialog() == DialogResult.OK)
             {
                 LoadData();
@@ -39,7 +34,7 @@ namespace RepairWorkSoftwareView
         {
             if (dataGridView.SelectedRows.Count == 1)
             {
-                var form = Container.Resolve<StockForm>();
+                var form = new StockForm();
                 form.Id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                 if (form.ShowDialog() == DialogResult.OK)
                 {
@@ -57,7 +52,11 @@ namespace RepairWorkSoftwareView
                     int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                     try
                     {
-                        service.DelElement(id);
+                        APIClient.PostRequest<StockBindingModel, bool>("api/Stock/DelElement",
+                        new StockBindingModel
+                        {
+                            Id = id
+                        });
                     }
                     catch (Exception ex)
                     {
@@ -83,7 +82,7 @@ namespace RepairWorkSoftwareView
         {
             try
             {
-                List<StockViewModel> list = service.GetList();
+                List<StockViewModel> list = APIClient.GetRequest<List<StockViewModel>>("api/Stock/GetList");
                 if (list != null)
                 {
                     dataGridView.DataSource = list;

@@ -16,19 +16,13 @@ namespace RepairWorkSoftwareView
 {
     public partial class CustomerEditForm : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
-
         public int Id { set { id = value; } }
-
-        private readonly ICustomerService service;
 
         private int? id;
 
-        public CustomerEditForm(ICustomerService service)
+        public CustomerEditForm()
         {
             InitializeComponent();
-            this.service = service;
         }
 
         private void CustomerForm_Load(object sernder, EventArgs e)
@@ -37,7 +31,7 @@ namespace RepairWorkSoftwareView
             {
                 try
                 {
-                    CustomerViewModel view = service.GetElement(id.Value);
+                    CustomerViewModel view = APIClient.GetRequest<CustomerViewModel>("api/Customer/Get/" + id);
                     if (view != null)
                     {
                         textBoxFIOInput.Text = view.CustomerFIO;
@@ -61,18 +55,20 @@ namespace RepairWorkSoftwareView
             {
                 if (id.HasValue)
                 {
-                    service.UpdElement(new CustomerBindingModel
-                    {
-                        Id = id.Value,
-                        CustomerFIO = textBoxFIOInput.Text
-                    });
+                    APIClient.PostRequest<CustomerBindingModel, bool>("api/Customer/UpdElement",
+                        new CustomerBindingModel
+                        {
+                            Id = id.Value,
+                            CustomerFIO = textBoxFIOInput.Text
+                        });
                 }
                 else
                 {
-                    service.AddElement(new CustomerBindingModel
-                    {
-                        CustomerFIO = textBoxFIOInput.Text
-                    });
+                    APIClient.PostRequest<CustomerBindingModel, bool>("api/Customer/AddElement",
+                        new CustomerBindingModel
+                        {
+                            CustomerFIO = textBoxFIOInput.Text
+                        });
                 }
 
                 MessageBox.Show("Сохранение прошло успешно", "Сообщение", MessageBoxButtons.OK, MessageBoxIcon.Information);
