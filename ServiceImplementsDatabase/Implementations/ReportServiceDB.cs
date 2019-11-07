@@ -66,7 +66,7 @@ namespace ServiceImplementsDatabase.Implementations
              .ToList();
         }
 
-        public void SaveClientOrders(ReportBindingModel model)
+        public void SaveCustomerOrders(ReportBindingModel model)
         {
             // Из ресрусов получаем шрифт для кирилицы
             if (!File.Exists("TIMCYR.TTF"))

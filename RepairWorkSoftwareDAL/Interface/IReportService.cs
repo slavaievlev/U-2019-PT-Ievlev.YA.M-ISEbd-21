@@ -18,6 +18,6 @@ namespace RepairWorkSoftwareDAL.Interface
 
         List<ClientOrdersModel> GetClientOrders(ReportBindingModel model);
 
-        void SaveClientOrders(ReportBindingModel model);
+        void SaveCustomerOrders(ReportBindingModel model);
     }
 }

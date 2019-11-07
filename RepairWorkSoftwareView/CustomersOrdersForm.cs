@@ -81,7 +81,7 @@ namespace RepairWorkSoftwareView
             {
                 try
                 {
-                    service.SaveClientOrders(new ReportBindingModel
+                    service.SaveCustomerOrders(new ReportBindingModel
                     {
                         FileName = sfd.FileName,
                         DateFrom = dateTimePickerFrom.Value,
