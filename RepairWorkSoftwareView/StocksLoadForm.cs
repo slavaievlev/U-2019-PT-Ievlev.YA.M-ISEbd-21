@@ -1,29 +1,16 @@
-﻿using RepairWorkSoftwareDAL.BindingModel;
-using RepairWorkSoftwareDAL.Interface;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Unity;
+using RepairWorkSoftwareDAL.BindingModel;
+using RepairWorkSoftwareDAL.ViewModel;
 
 namespace RepairWorkSoftwareView
 {
     public partial class StocksLoadForm : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
-
-        private readonly IReportService service;
-
-        public StocksLoadForm(IReportService service)
+        public StocksLoadForm()
         {
             InitializeComponent();
-            this.service = service;
 
             FormStocksLoad_Load();
         }
@@ -32,7 +19,7 @@ namespace RepairWorkSoftwareView
         {
             try
             {
-                var dict = service.GetStocksLoad();
+                var dict = ApiClient.GetRequest<List<StocksLoadViewModel>>("api/Report/GetStocksLoad");
                 if (dict != null)
                 {
                     dataGridView.Rows.Clear();
@@ -65,7 +52,7 @@ namespace RepairWorkSoftwareView
             {
                 try
                 {
-                    service.SaveStocksLoad(new ReportBindingModel
+                    ApiClient.PostRequest<ReportBindingModel, bool>("api/Report/SaveStocksLoad", new ReportBindingModel
                     {
                         FileName = sfd.FileName
                     });
@@ -79,5 +66,6 @@ namespace RepairWorkSoftwareView
                 }
             }
         }
-    }
+    }
+
 }

@@ -1,30 +1,15 @@
-﻿using Microsoft.Reporting.WinForms;
-using RepairWorkSoftwareDAL.BindingModel;
-using RepairWorkSoftwareDAL.Interface;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows.Forms;
-using Unity;
+using Microsoft.Reporting.WinForms;
+using RepairWorkSoftwareDAL.BindingModel;
 
 namespace RepairWorkSoftwareView
 {
     public partial class CustomersOrdersForm : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
-
-        private readonly IReportService service;
-
-        public CustomersOrdersForm(IReportService service)
+        public CustomersOrdersForm()
         {
             InitializeComponent();
-            this.service = service;
         }
 
         private void CustomersOrdersForm_Load(object sender, EventArgs e)
@@ -48,7 +33,7 @@ namespace RepairWorkSoftwareView
                 " по " +
                dateTimePickerTo.Value.ToShortDateString());
                 reportViewer.LocalReport.SetParameters(parameter);
-                var dataSource = service.GetClientOrders(new ReportBindingModel
+                var dataSource = ApiClient.PostRequest<ReportBindingModel, bool>("api/Report/GetClientOrders", new ReportBindingModel
                 {
                     DateFrom = dateTimePickerFrom.Value,
                     DateTo = dateTimePickerTo.Value
@@ -81,7 +66,7 @@ namespace RepairWorkSoftwareView
             {
                 try
                 {
-                    service.SaveCustomerOrders(new ReportBindingModel
+                    ApiClient.PostRequest<ReportBindingModel, bool>("api/Report/SaveCustomerOrders", new ReportBindingModel
                     {
                         FileName = sfd.FileName,
                         DateFrom = dateTimePickerFrom.Value,

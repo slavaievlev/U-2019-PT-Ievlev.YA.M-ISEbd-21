@@ -1,44 +1,23 @@
-﻿using RepairWorkSoftwareDAL.BindingModel;
-using RepairWorkSoftwareDAL.Interface;
-using RepairWorkSoftwareDAL.ViewModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Unity;
+using RepairWorkSoftwareDAL.BindingModel;
+using RepairWorkSoftwareDAL.ViewModel;
 
 namespace RepairWorkSoftwareView
 {
     public partial class CreateOrderForm : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
-
-        private readonly ICustomerService customerService;
-
-        private readonly IWorkService workService;
-
-        private readonly IMainService mainService;
-
-        public CreateOrderForm(ICustomerService customerService,
-            IWorkService workService, IMainService mainService)
+        public CreateOrderForm()
         {
             InitializeComponent();
-            this.customerService = customerService;
-            this.workService = workService;
-            this.mainService = mainService;
         }
 
         private void CreateOrderForm_Load(object sender, EventArgs e)
         {
             try
             {
-                List<CustomerViewModel> customerList = customerService.GetList();
+                List<CustomerViewModel> customerList = ApiClient.GetRequest<List<CustomerViewModel>>("api/Customer/GetList");
                 if (customerList != null)
                 {
                     comboBoxCustomer.DisplayMember = "CustomerFIO";
@@ -47,7 +26,7 @@ namespace RepairWorkSoftwareView
                     comboBoxCustomer.SelectedItem = null;
                 }
 
-                List<WorkViewModel> workList = workService.GetList();
+                List<WorkViewModel> workList = ApiClient.GetRequest<List<WorkViewModel>>("api/Work/GetList");
                 if (customerList != null)
                 {
                     comboBoxWork.DisplayMember = "WorkName";
@@ -84,7 +63,7 @@ namespace RepairWorkSoftwareView
 
             try
             {
-                mainService.CreateOrder(new OrderBindingModel
+                ApiClient.PostRequest<OrderBindingModel, bool>("api/Main/CreateOrder" , new OrderBindingModel
                 {
                     CustomerId = Convert.ToInt32(comboBoxCustomer.SelectedValue),
                     WorkId = Convert.ToInt32(comboBoxWork.SelectedValue),
@@ -116,7 +95,7 @@ namespace RepairWorkSoftwareView
                 try
                 {
                     int id = Convert.ToInt32(comboBoxWork.SelectedValue);
-                    WorkViewModel work = workService.GetElement(id);
+                    WorkViewModel work = ApiClient.GetRequest<WorkViewModel>("api/Work/Get/" + id);
                     int count = Convert.ToInt32(textBoxCountInput.Text);
                     //textBoxSumInput.Text = (count * work.Price).ToString();
                     int result = Convert.ToInt32(count * work.Price);

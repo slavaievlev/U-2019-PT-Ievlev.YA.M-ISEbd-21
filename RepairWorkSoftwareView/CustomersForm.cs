@@ -1,34 +1,21 @@
-﻿using RepairWorkSoftwareDAL.Interface;
-using RepairWorkSoftwareDAL.ViewModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Unity;
+using RepairWorkSoftwareDAL.BindingModel;
+using RepairWorkSoftwareDAL.ViewModel;
 
 namespace RepairWorkSoftwareView
 {
     public partial class CustomersForm : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
-
-        private readonly ICustomerService service;
-
-        public CustomersForm(ICustomerService service)
+        public CustomersForm()
         {
             InitializeComponent();
-            this.service = service;
         }
 
         private void ButtonCustomerAdd_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<CustomerEditForm>();
+            var form = new CustomerEditForm();
             if (form.ShowDialog() == DialogResult.OK)
             {
                 LoadData();
@@ -39,7 +26,7 @@ namespace RepairWorkSoftwareView
         {
             if (dataGridView.SelectedRows.Count == 1)
             {
-                var form = Container.Resolve<CustomerEditForm>();
+                var form = new CustomerEditForm();
                 form.Id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                 if (form.ShowDialog() == DialogResult.OK)
                 {
@@ -57,7 +44,10 @@ namespace RepairWorkSoftwareView
                     int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                     try
                     {
-                        service.DelElement(id);
+                        ApiClient.PostRequest<CustomerBindingModel, bool>("api/Customer/DelElement", new CustomerBindingModel
+                        {
+                            Id = id
+                        });
                     }
                     catch (Exception ex)
                     {
@@ -83,7 +73,7 @@ namespace RepairWorkSoftwareView
         {
             try
             {
-                List<CustomerViewModel> list = service.GetList();
+                List<CustomerViewModel> list = ApiClient.GetRequest<List<CustomerViewModel>>("api/Customer/GetList");
                 if (list != null)
                 {
                     dataGridView.DataSource = list;

@@ -1,39 +1,23 @@
-﻿using RepairWorkSoftwareDAL.BindingModel;
-using RepairWorkSoftwareDAL.Interface;
-using RepairWorkSoftwareDAL.ViewModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Unity;
+using RepairWorkSoftwareDAL.BindingModel;
+using RepairWorkSoftwareDAL.ViewModel;
 
 namespace RepairWorkSoftwareView
 {
     public partial class MainForm : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
-
-        private readonly IMainService mainService;
-        private readonly IReportService reportService;
-
-        public MainForm(IMainService mainService, IReportService reportService)
+        public MainForm()
         {
             InitializeComponent();
-            this.mainService = mainService;
-            this.reportService = reportService;
         }
 
         private void LoadData()
         {
             try
             {
-                List<OrderViewModel> list = mainService.GetList();
+                List<OrderViewModel> list = ApiClient.GetRequest<List<OrderViewModel>>("api/Main/GetList");
                 if (list != null)
                 {
                     dataGridView.DataSource = list;
@@ -51,25 +35,25 @@ namespace RepairWorkSoftwareView
 
         private void КлиентыToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<CustomersForm>();
+            var form = new CustomersForm();
             form.ShowDialog();
         }
 
         private void КомпонентыToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<MaterialsForm>();
+            var form = new MaterialsForm();
             form.ShowDialog();
         }
 
         private void ИзделияToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<WorksForm>();
+            var form = new WorksForm();
             form.ShowDialog();
         }
 
         private void ButtonOrderAdd_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<CreateOrderForm>();
+            var form = new CreateOrderForm();
             form.ShowDialog();
             LoadData();
         }
@@ -81,7 +65,7 @@ namespace RepairWorkSoftwareView
                 int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                 try
                 {
-                    mainService.TakeOrderInWork(new OrderBindingModel
+                    ApiClient.PostRequest<OrderBindingModel, bool>("api/Main/TakeOrderInWork", new OrderBindingModel
                     {
                         Id = id
                     });
@@ -101,7 +85,7 @@ namespace RepairWorkSoftwareView
                 int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                 try
                 {
-                    mainService.FinishOrder(new OrderBindingModel
+                    ApiClient.PostRequest<OrderBindingModel, bool>("api/Main/FinishOrder", new OrderBindingModel
                     {
                         Id = id
                     });
@@ -121,7 +105,7 @@ namespace RepairWorkSoftwareView
                 int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
                 try
                 {
-                    mainService.PayOrder(new OrderBindingModel
+                    ApiClient.PostRequest<OrderBindingModel, bool>("api/Main/PayOrder", new OrderBindingModel
                     {
                         Id = id
                     });
@@ -141,13 +125,13 @@ namespace RepairWorkSoftwareView
 
         private void складыToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<StocksForm>();
+            var form = new StocksForm();
             form.ShowDialog();
         }
 
         private void пополнитьСкладToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<PutOnStockForm>();
+            var form = new PutOnStockForm();
             form.ShowDialog();
         }
 
@@ -161,7 +145,7 @@ namespace RepairWorkSoftwareView
             {
                 try
                 {
-                    reportService.SaveProductPrice(new ReportBindingModel
+                    ApiClient.PostRequest<ReportBindingModel, bool>("api/Report/SaveProductPrice", new ReportBindingModel
                     {
                         FileName = sfd.FileName
                     });
@@ -176,16 +160,15 @@ namespace RepairWorkSoftwareView
             }
         }
 
-        private void загруженностьСкладовToolStripMenuItem_Click(object sender, EventArgs
-       e)
+        private void загруженностьСкладовToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<StocksLoadForm>();
-        form.ShowDialog();
+            var form = new StocksLoadForm();
+            form.ShowDialog();
         }
 
         private void заказыКлиентовToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<CustomersOrdersForm>();
+            var form = new CustomersOrdersForm();
             form.ShowDialog();
         }
     }

@@ -1,18 +1,28 @@
-﻿using Microsoft.Office.Interop.Word;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.SqlServer;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using iTextSharp.text;
+using iTextSharp.text.pdf;
+using Microsoft.Office.Interop.Excel;
+using Microsoft.Office.Interop.Word;
 using RepairWorkSoftwareDAL.BindingModel;
 using RepairWorkSoftwareDAL.Interface;
 using RepairWorkSoftwareDAL.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Data.Entity;
-using System.Threading.Tasks;
-using Microsoft.Office.Interop.Excel;
-using System.Data.Entity.SqlServer;
-using iTextSharp.text.pdf;
-using iTextSharp.text;
+using ServiceImplementsDatabase.Properties;
+using Application = Microsoft.Office.Interop.Word.Application;
+using Document = iTextSharp.text.Document;
+using Font = iTextSharp.text.Font;
+using Paragraph = iTextSharp.text.Paragraph;
+using Range = Microsoft.Office.Interop.Excel.Range;
+using XlBorderWeight = Microsoft.Office.Interop.Excel.XlBorderWeight;
+using XlColorIndex = Microsoft.Office.Interop.Excel.XlColorIndex;
+using XlHAlign = Microsoft.Office.Interop.Excel.XlHAlign;
+using XlLineStyle = Microsoft.Office.Interop.Excel.XlLineStyle;
+using XlVAlign = Microsoft.Office.Interop.Excel.XlVAlign;
 
 namespace ServiceImplementsDatabase.Implementations
 {
@@ -71,14 +81,14 @@ namespace ServiceImplementsDatabase.Implementations
             // Из ресрусов получаем шрифт для кирилицы
             if (!File.Exists("TIMCYR.TTF"))
             {
-                File.WriteAllBytes("TIMCYR.TTF", Properties.Resources.TIMCYR);
+                File.WriteAllBytes("TIMCYR.TTF", Resources.TIMCYR);
             }
 
             // Открываем файл для работы
             FileStream fs = new FileStream(model.FileName, FileMode.OpenOrCreate, FileAccess.Write);
             
             // Создаем документ, задаем границы, связываем документ и поток
-            iTextSharp.text.Document doc = new iTextSharp.text.Document();
+            Document doc = new Document();
             doc.SetMargins(0.5f, 0.5f, 0.5f, 0.5f);
             PdfWriter writer = PdfWriter.GetInstance(doc, fs);
             doc.Open();
@@ -86,16 +96,16 @@ namespace ServiceImplementsDatabase.Implementations
             
             // Вставляем заголовок
             var phraseTitle = new Phrase("Заказы клиентов",
-            new iTextSharp.text.Font(baseFont, 16, iTextSharp.text.Font.BOLD));
-            iTextSharp.text.Paragraph paragraph = new iTextSharp.text.Paragraph(phraseTitle)
+            new Font(baseFont, 16, Font.BOLD));
+            Paragraph paragraph = new Paragraph(phraseTitle)
             {
                 Alignment = Element.ALIGN_CENTER, SpacingAfter = 12
             };
             doc.Add(paragraph);
             var phrasePeriod = new Phrase("c " + model.DateFrom.Value.ToShortDateString() + 
-                " по " + model.DateTo.Value.ToShortDateString(), new iTextSharp.text.Font(
-                    baseFont, 14, iTextSharp.text.Font.BOLD));
-            paragraph = new iTextSharp.text.Paragraph(phrasePeriod)
+                " по " + model.DateTo.Value.ToShortDateString(), new Font(
+                    baseFont, 14, Font.BOLD));
+            paragraph = new Paragraph(phrasePeriod)
             {
                 Alignment = Element.ALIGN_CENTER,
                 SpacingAfter = 12
@@ -111,7 +121,7 @@ namespace ServiceImplementsDatabase.Implementations
             
             // Вставляем шапку
             PdfPCell cell = new PdfPCell();
-            var fontForCellBold = new iTextSharp.text.Font(baseFont, 10, iTextSharp.text.Font.BOLD);
+            var fontForCellBold = new Font(baseFont, 10, Font.BOLD);
             table.AddCell(new PdfPCell(new Phrase("ФИО клиента", fontForCellBold))
             {
                 HorizontalAlignment = Element.ALIGN_CENTER
@@ -144,7 +154,7 @@ namespace ServiceImplementsDatabase.Implementations
             
             // Заполняем таблицу
             var list = GetClientOrders(model);
-            var fontForCells = new iTextSharp.text.Font(baseFont, 10);
+            var fontForCells = new Font(baseFont, 10);
             for (int i = 0; i < list.Count; i++)
             {
                 cell = new PdfPCell(new Phrase(list[i].ClientName, fontForCells));
@@ -195,10 +205,10 @@ namespace ServiceImplementsDatabase.Implementations
                 File.Delete(model.FileName);
             }
             
-            var winword = new Microsoft.Office.Interop.Word.Application();
+            var winword = new Application();
             try
             {
-                object missing = System.Reflection.Missing.Value;
+                object missing = Missing.Value;
 
                 // Создаем документ
                 Microsoft.Office.Interop.Word.Document document = winword.Documents.Add(
@@ -323,7 +333,7 @@ namespace ServiceImplementsDatabase.Implementations
                 excelworksheet.PageSetup.CenterVertically = true;
                 
                 // Получаем ссылку на первые 3 ячейки
-                Microsoft.Office.Interop.Excel.Range excelcells = excelworksheet.get_Range("A1", "C1");
+                Range excelcells = excelworksheet.get_Range("A1", "C1");
                 
                 // Объединяем их
                 excelcells.Merge(Type.Missing);
@@ -332,16 +342,16 @@ namespace ServiceImplementsDatabase.Implementations
                 excelcells.Font.Bold = true;
                 excelcells.Value2 = "Загруженность складов";
                 excelcells.RowHeight = 25;
-                excelcells.HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignCenter;
-                excelcells.VerticalAlignment = Microsoft.Office.Interop.Excel.XlVAlign.xlVAlignCenter;
+                excelcells.HorizontalAlignment = XlHAlign.xlHAlignCenter;
+                excelcells.VerticalAlignment = XlVAlign.xlVAlignCenter;
                 excelcells.Font.Name = "Times New Roman";
                 excelcells.Font.Size = 14;
                 excelcells = excelworksheet.get_Range("A2", "C2");
                 excelcells.Merge(Type.Missing);
                 excelcells.Value2 = "на" + DateTime.Now.ToShortDateString();
                 excelcells.RowHeight = 20;
-                excelcells.HorizontalAlignment = Microsoft.Office.Interop.Excel.XlHAlign.xlHAlignCenter;
-                excelcells.VerticalAlignment = Microsoft.Office.Interop.Excel.XlVAlign.xlVAlignCenter;
+                excelcells.HorizontalAlignment = XlHAlign.xlHAlignCenter;
+                excelcells.VerticalAlignment = XlVAlign.xlVAlignCenter;
                 excelcells.Font.Name = "Times New Roman";
                 excelcells.Font.Size = 12;
                 var dict = GetStocksLoad();
@@ -364,15 +374,15 @@ namespace ServiceImplementsDatabase.Implementations
                             var excelBorder =
                             excelworksheet.get_Range(excelcells,
                             excelcells.get_Offset(elem.Components.Count() - 1, 1));
-                            excelBorder.Borders.LineStyle = Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous;
-                            excelBorder.Borders.Weight = Microsoft.Office.Interop.Excel.XlBorderWeight.xlThin;
+                            excelBorder.Borders.LineStyle = XlLineStyle.xlContinuous;
+                            excelBorder.Borders.Weight = XlBorderWeight.xlThin;
                             excelBorder.HorizontalAlignment = Constants.xlCenter;
                             excelBorder.VerticalAlignment = Constants.xlCenter;
 
-                            excelBorder.BorderAround(Microsoft.Office.Interop.Excel.XlLineStyle.xlContinuous,
+                            excelBorder.BorderAround(XlLineStyle.xlContinuous,
 
-                            Microsoft.Office.Interop.Excel.XlBorderWeight.xlMedium,
-                            Microsoft.Office.Interop.Excel.XlColorIndex.xlColorIndexAutomatic, 1);
+                            XlBorderWeight.xlMedium,
+                            XlColorIndex.xlColorIndexAutomatic, 1);
                             foreach (var listElem in elem.Components)
                             {
                                 excelcells.Value2 = listElem.Item1;

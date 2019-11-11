@@ -1,34 +1,19 @@
-﻿using RepairWorkSoftwareDAL.BindingModel;
-using RepairWorkSoftwareDAL.Interface;
-using RepairWorkSoftwareDAL.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows.Forms;
-using Unity;
+using RepairWorkSoftwareDAL.BindingModel;
+using RepairWorkSoftwareDAL.ViewModel;
 
 namespace RepairWorkSoftwareView
 {
     public partial class CustomerEditForm : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
-
         public int Id { set { id = value; } }
-
-        private readonly ICustomerService service;
 
         private int? id;
 
-        public CustomerEditForm(ICustomerService service)
+        public CustomerEditForm()
         {
             InitializeComponent();
-            this.service = service;
         }
 
         private void CustomerForm_Load(object sernder, EventArgs e)
@@ -37,7 +22,7 @@ namespace RepairWorkSoftwareView
             {
                 try
                 {
-                    CustomerViewModel view = service.GetElement(id.Value);
+                    CustomerViewModel view = ApiClient.GetRequest<CustomerViewModel>("api/Customer/Get/" + id.Value);
                     if (view != null)
                     {
                         textBoxFIOInput.Text = view.CustomerFIO;
@@ -61,7 +46,7 @@ namespace RepairWorkSoftwareView
             {
                 if (id.HasValue)
                 {
-                    service.UpdElement(new CustomerBindingModel
+                    ApiClient.PostRequest<CustomerBindingModel, bool>("api/Customer/UpdElement", new CustomerBindingModel
                     {
                         Id = id.Value,
                         CustomerFIO = textBoxFIOInput.Text
@@ -69,7 +54,7 @@ namespace RepairWorkSoftwareView
                 }
                 else
                 {
-                    service.AddElement(new CustomerBindingModel
+                    ApiClient.PostRequest<CustomerBindingModel, bool>("api/Customer/AddElement", new CustomerBindingModel
                     {
                         CustomerFIO = textBoxFIOInput.Text
                     });

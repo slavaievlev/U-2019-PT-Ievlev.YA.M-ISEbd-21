@@ -1,36 +1,22 @@
-﻿using RepairWorkSoftwareDAL.BindingModel;
-using RepairWorkSoftwareDAL.Interface;
-using RepairWorkSoftwareDAL.ViewModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Unity;
+using RepairWorkSoftwareDAL.BindingModel;
+using RepairWorkSoftwareDAL.ViewModel;
 
 namespace RepairWorkSoftwareView
 {
     public partial class WorkEditForm : Form
     {
-        [Dependency]
-        public new IUnityContainer Container { get; set; }
-
         public int Id { set { id = value; } }
-
-        private readonly IWorkService service;
 
         private int? id;
 
         private List<WorkMaterialViewModel> workMaterials;
 
-        public WorkEditForm(IWorkService service)
+        public WorkEditForm()
         {
             InitializeComponent();
-            this.service = service;
         }
 
         private void WorkEditForm_Load(object sender, EventArgs e)
@@ -39,7 +25,7 @@ namespace RepairWorkSoftwareView
             {
                 try
                 {
-                    WorkViewModel view = service.GetElement(id.Value);
+                    WorkViewModel view = ApiClient.GetRequest<WorkViewModel>("api/Work/Get/" + id.Value);
                     if (view != null)
                     {
                         textBoxNameInput.Text = view.WorkName;
@@ -81,7 +67,7 @@ namespace RepairWorkSoftwareView
 
         private void ButtonAdd_Click(object sender, EventArgs e)
         {
-            var form = Container.Resolve<WorkMaterialAddForm>();
+            var form = new WorkMaterialAddForm();
             if (form.ShowDialog() == DialogResult.OK)
             {
                 if (form.Model != null)
@@ -100,7 +86,7 @@ namespace RepairWorkSoftwareView
         {
             if (dataGridView.SelectedRows.Count == 1)
             {
-                var form = Container.Resolve<WorkMaterialAddForm>();
+                var form = new WorkMaterialAddForm();
                 form.Model = workMaterials[dataGridView.SelectedRows[0].Cells[0].RowIndex];
                 if (form.ShowDialog() == DialogResult.OK)
                 {
@@ -170,7 +156,7 @@ namespace RepairWorkSoftwareView
 
                 if (id.HasValue)
                 {
-                    service.UpdElement(new WorkBindingModel
+                    ApiClient.PostRequest<WorkBindingModel, bool>("api/Work/UpdElement", new WorkBindingModel
                     {
                         Id = id.Value,
                         WorkName = textBoxNameInput.Text,
@@ -180,7 +166,7 @@ namespace RepairWorkSoftwareView
                 }
                 else
                 {
-                    service.AddElement(new WorkBindingModel
+                    ApiClient.PostRequest<WorkBindingModel, bool>("api/Work/AddElement", new WorkBindingModel
                     {
                         WorkName = textBoxNameInput.Text,
                         Price = Convert.ToInt32(textBoxPriceInput.Text),
