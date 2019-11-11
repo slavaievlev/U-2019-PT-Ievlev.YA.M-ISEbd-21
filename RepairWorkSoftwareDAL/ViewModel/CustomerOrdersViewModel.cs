@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace RepairWorkSoftwareDAL.ViewModel
 {
     [DataContract]
-    public class ClientOrdersModel
+    public class CustomerOrdersViewModel
     {
         [DataMember]
         public string ClientName { get; set; }

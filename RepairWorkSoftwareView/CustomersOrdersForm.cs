@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows.Forms;
 using Microsoft.Reporting.WinForms;
 using RepairWorkSoftwareDAL.BindingModel;
+using RepairWorkSoftwareDAL.ViewModel;
 
 namespace RepairWorkSoftwareView
 {
@@ -33,7 +35,7 @@ namespace RepairWorkSoftwareView
                 " по " +
                dateTimePickerTo.Value.ToShortDateString());
                 reportViewer.LocalReport.SetParameters(parameter);
-                var dataSource = ApiClient.PostRequest<ReportBindingModel, bool>("api/Report/GetClientOrders", new ReportBindingModel
+                List<CustomerOrdersViewModel> dataSource = ApiClient.PostRequest<ReportBindingModel, List<CustomerOrdersViewModel>>("api/Report/GetCustomerOrders", new ReportBindingModel
                 {
                     DateFrom = dateTimePickerFrom.Value,
                     DateTo = dateTimePickerTo.Value

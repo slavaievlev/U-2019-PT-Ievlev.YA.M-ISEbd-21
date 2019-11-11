@@ -35,14 +35,14 @@ namespace ServiceImplementsDatabase.Implementations
             this.context = context;
         }
 
-        public List<ClientOrdersModel> GetClientOrders(ReportBindingModel model)
+        public List<CustomerOrdersViewModel> GetClientOrders(ReportBindingModel model)
         {
             return context.Orders
                 .Include(rec => rec.Customer)
                 .Include(rec => rec.Work)
             .Where(rec => rec.DateCreate >= model.DateFrom &&
                 rec.DateCreate <= model.DateTo)
-            .Select(rec => new ClientOrdersModel
+            .Select(rec => new CustomerOrdersViewModel
             {
                  ClientName = rec.Customer.CustomerFIO,
                  DateCreate = SqlFunctions.DateName("dd", rec.DateCreate) + " " + 

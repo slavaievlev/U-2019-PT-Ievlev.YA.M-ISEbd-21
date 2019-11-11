@@ -16,7 +16,7 @@ namespace RepairWorkSoftwareDAL.Interface
 
         void SaveStocksLoad(ReportBindingModel model);
 
-        List<ClientOrdersModel> GetClientOrders(ReportBindingModel model);
+        List<CustomerOrdersViewModel> GetClientOrders(ReportBindingModel model);
 
         void SaveCustomerOrders(ReportBindingModel model);
     }
