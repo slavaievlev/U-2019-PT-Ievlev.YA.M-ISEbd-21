@@ -12,6 +12,8 @@ namespace RepairWorkSoftwareDAL.Interface
     {
         List<OrderViewModel> GetList();
 
+        List<OrderViewModel> GetFreeOrders();
+
         void CreateOrder(OrderBindingModel model);
 
         void TakeOrderInWork(OrderBindingModel model);

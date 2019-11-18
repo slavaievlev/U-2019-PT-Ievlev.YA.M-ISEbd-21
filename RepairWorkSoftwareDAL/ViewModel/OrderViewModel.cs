@@ -47,5 +47,11 @@ namespace RepairWorkSoftwareDAL.ViewModel
         [DataMember]
         [DisplayName("Дата выполнения")]
         public string DateImplement { get; set; }
+        
+        [DataMember]
+        public int? ImplementerId { get; set; }
+        
+        [DataMember]
+        public string ImplementerName { get; set; }
     }
 }

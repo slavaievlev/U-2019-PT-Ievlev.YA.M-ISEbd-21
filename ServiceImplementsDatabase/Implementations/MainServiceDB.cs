@@ -1,28 +1,26 @@
-﻿using RepairWorkSoftwareDAL.BindingModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Data.Entity.SqlServer;
+using System.Linq;
+using RepairWorkSoftwareDAL.BindingModel;
 using RepairWorkSoftwareDAL.Interface;
 using RepairWorkSoftwareDAL.ViewModel;
 using RepairWorkSoftwareModel;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity.SqlServer;
-using System.Data.Entity;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ServiceImplementsDatabase.Implementations
 {
     public class MainServiceDB : IMainService
     {
-        private AbstractDbContext context;
+        private readonly AbstractDbContext _context;
 
         public MainServiceDB(AbstractDbContext context)
         {
-            this.context = context;
+            this._context = context;
         }
         public List<OrderViewModel> GetList()
         {
-            List<OrderViewModel> result = context.Orders.Select(rec => new OrderViewModel
+            List<OrderViewModel> result = _context.Orders.Select(rec => new OrderViewModel
             {
                 Id = rec.Id,
                 CustomerId = rec.CustomerId,
@@ -43,9 +41,21 @@ namespace ServiceImplementsDatabase.Implementations
                 .ToList();
             return result;
         }
+
+        public List<OrderViewModel> GetFreeOrders()
+        {
+            return _context.Orders
+                .Where(o => o.Status == OrderStatus.Принят || o.Status == OrderStatus.НедостаточноРусурсов)
+                .Select(o => new OrderViewModel
+                {
+                    Id = o.Id
+                })
+                .ToList();
+        }
+
         public void CreateOrder(OrderBindingModel model)
         {
-            context.Orders.Add(new Order
+            _context.Orders.Add(new Order
             {
                 CustomerId = model.CustomerId,
                 WorkId = model.WorkId,
@@ -54,15 +64,15 @@ namespace ServiceImplementsDatabase.Implementations
                 Sum = model.Sum,
                 Status = OrderStatus.Принят
             });
-            context.SaveChanges();
+            _context.SaveChanges();
         }
         public void TakeOrderInWork(OrderBindingModel model)
         {
-            using (var transaction = context.Database.BeginTransaction())
+            using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    Order element = context.Orders.FirstOrDefault(rec => rec.Id ==
+                    Order element = _context.Orders.FirstOrDefault(rec => rec.Id ==
                    model.Id);
                     if (element == null)
                     {
@@ -72,12 +82,12 @@ namespace ServiceImplementsDatabase.Implementations
                     {
                         throw new Exception("Заказ не в статусе \"Принят\"");
                     }
-                    var productComponents = context.WorkMaterials.Include(rec => rec.Material).Where(rec => rec.WorkId == element.WorkId);                  
+                    var productComponents = _context.WorkMaterials.Include(rec => rec.Material).Where(rec => rec.WorkId == element.WorkId);                  
 
                     foreach (var productComponent in productComponents)
                     {
                         int countOnStocks = productComponent.Count * element.Count;
-                        var stockComponents = context.StockMaterials.Where(rec =>
+                        var stockComponents = _context.StockMaterials.Where(rec =>
                         rec.MaterialId == productComponent.MaterialId);
                         foreach (var stockComponent in stockComponents)
                         {
@@ -85,14 +95,14 @@ namespace ServiceImplementsDatabase.Implementations
                             {
                                 stockComponent.Count -= countOnStocks;
                                 countOnStocks = 0;
-                                context.SaveChanges();
+                                _context.SaveChanges();
                                 break;
                             }
                             else
                             {
                                 countOnStocks -= stockComponent.Count;
                                 stockComponent.Count = 0;
-                                context.SaveChanges();
+                                _context.SaveChanges();
                             }
                         }
                         if (countOnStocks > 0)
@@ -103,7 +113,7 @@ namespace ServiceImplementsDatabase.Implementations
                     }
                     element.DateImplement = DateTime.Now;
                     element.Status = OrderStatus.Выполняется;
-                    context.SaveChanges();
+                    _context.SaveChanges();
                     transaction.Commit();
                 }
                 catch (Exception)
@@ -115,7 +125,7 @@ namespace ServiceImplementsDatabase.Implementations
         }
         public void FinishOrder(OrderBindingModel model)
         {
-            Order element = context.Orders.FirstOrDefault(rec => rec.Id == model.Id);
+            Order element = _context.Orders.FirstOrDefault(rec => rec.Id == model.Id);
 
             if (element == null)
             {
@@ -127,11 +137,11 @@ namespace ServiceImplementsDatabase.Implementations
             }
 
             element.Status = OrderStatus.Готов;
-            context.SaveChanges();
+            _context.SaveChanges();
         }
         public void PayOrder(OrderBindingModel model)
         {
-            Order element = context.Orders.FirstOrDefault(rec => rec.Id == model.Id);
+            Order element = _context.Orders.FirstOrDefault(rec => rec.Id == model.Id);
             if (element == null)
             {
                 throw new Exception("Элемент не найден");
@@ -141,11 +151,11 @@ namespace ServiceImplementsDatabase.Implementations
                 throw new Exception("Заказ не в статусе \"Готов\"");
             }
             element.Status = OrderStatus.Оплачен;
-            context.SaveChanges();
+            _context.SaveChanges();
         }
         public void PutMaterialOnStock(StockMaterialBindingModel model)
         {
-            StockMaterial element = context.StockMaterials.FirstOrDefault(rec =>
+            StockMaterial element = _context.StockMaterials.FirstOrDefault(rec =>
                 rec.StockId == model.StockId && rec.MaterialId == model.MaterialId);
             if (element != null)
             {
@@ -153,14 +163,14 @@ namespace ServiceImplementsDatabase.Implementations
             }
             else
             {
-                context.StockMaterials.Add(new StockMaterial
+                _context.StockMaterials.Add(new StockMaterial
                 {
                     StockId = model.StockId,
                     MaterialId = model.MaterialId,
                     Count = model.Count
                 });
             }
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
     }

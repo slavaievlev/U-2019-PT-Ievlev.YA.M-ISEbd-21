@@ -24,5 +24,8 @@ namespace RepairWorkSoftwareDAL.BindingModel
 
         [DataMember]
         public decimal Sum { get; set; }
+        
+        [DataMember]
+        public int? ImplementerId { get; set; }
     }
 }

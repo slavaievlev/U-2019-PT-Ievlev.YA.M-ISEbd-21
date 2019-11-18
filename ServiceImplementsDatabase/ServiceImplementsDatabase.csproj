@@ -80,6 +80,7 @@
   <ItemGroup>
     <Compile Include="AbstractDbContext.cs" />
     <Compile Include="Implementations\CustomerServiceDB.cs" />
+    <Compile Include="Implementations\ImplementerServiceDB.cs" />
     <Compile Include="Implementations\MainServiceDB.cs" />
     <Compile Include="Implementations\MaterialServiceDB.cs" />
     <Compile Include="Implementations\ReportServiceDB.cs" />
@@ -88,6 +89,10 @@
     <Compile Include="Migrations\201909110321596_Version_Name.cs" />
     <Compile Include="Migrations\201909110321596_Version_Name.Designer.cs">
       <DependentUpon>201909110321596_Version_Name.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201911122015073_lab6.cs" />
+    <Compile Include="Migrations\201911122015073_lab6.Designer.cs">
+      <DependentUpon>201911122015073_lab6.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -116,6 +121,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201909110321596_Version_Name.resx">
       <DependentUpon>201909110321596_Version_Name.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201911122015073_lab6.resx">
+      <DependentUpon>201911122015073_lab6.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

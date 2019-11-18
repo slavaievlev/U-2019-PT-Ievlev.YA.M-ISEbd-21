@@ -1,23 +1,30 @@
 ﻿﻿using System;
-using System.Web.Http;
+ using System.Collections.Generic;
+ using System.Web.Http;
 using RepairWorkSoftwareDAL.BindingModel;
 using RepairWorkSoftwareDAL.Interface;
+ using RepairWorkSoftwareDAL.ViewModel;
+ using RepairWorkSoftwareRestApi.Service;
 
-namespace RepairWorkSoftwareRestAPI.Controllers
+ namespace RepairWorkSoftwareRestAPI.Controllers
 {
     public class MainController : ApiController
     {
-        private readonly IMainService _service;
+        private readonly IMainService _mainService;
 
-        public MainController(IMainService service)
+        private readonly IImplementerService _implementerService;
+
+        public MainController(IMainService mainService,
+            IImplementerService implementerService)
         {
-            _service = service;
+            _mainService = mainService;
+            _implementerService = implementerService;
         }
 
         [HttpGet]
         public IHttpActionResult GetList()
         {
-            var list = _service.GetList();
+            var list = _mainService.GetList();
             if (list == null)
             {
                 InternalServerError(new Exception("Нет данных"));
@@ -29,31 +36,35 @@ namespace RepairWorkSoftwareRestAPI.Controllers
         [HttpPost]
         public void CreateOrder(OrderBindingModel model)
         {
-            _service.CreateOrder(model);
-        }
-
-        [HttpPost]
-        public void TakeOrderInWork(OrderBindingModel model)
-        {
-            _service.TakeOrderInWork(model);
-        }
-
-        [HttpPost]
-        public void FinishOrder(OrderBindingModel model)
-        {
-            _service.FinishOrder(model);
+            _mainService.CreateOrder(model);
         }
 
         [HttpPost]
         public void PayOrder(OrderBindingModel model)
         {
-            _service.PayOrder(model);
+            _mainService.PayOrder(model);
         }
 
         [HttpPost]
         public void PutMaterialOnStock(StockMaterialBindingModel model)
         {
-            _service.PutMaterialOnStock(model);
+            _mainService.PutMaterialOnStock(model);
+        }
+
+        [HttpPost]
+        public void StartWork()
+        {
+            List<OrderViewModel> orders = _mainService.GetFreeOrders();
+            foreach (var order in orders)
+            {
+                ImplementerViewModel impl = _implementerService.GetFreeWorker();
+                if (impl == null)
+                {
+                    throw new Exception("Нет сотрудников");
+                }
+
+                new WorkImplementer(_mainService, _implementerService, impl.Id, order.Id);
+            }
         }
     }
 }
