@@ -15,5 +15,8 @@ namespace RepairWorkSoftwareDAL.BindingModel
 
         [DataMember]
         public string CustomerFIO { get; set; }
+        
+        [DataMember]
+        public string Mail { get; set; }
     }
 }

@@ -37,5 +37,7 @@ namespace ServiceImplementsDatabase
         public virtual DbSet<StockMaterial> StockMaterials { get; set; }
 
         public virtual DbSet<Implementer> Implementers { get; set; }
+        
+        public virtual DbSet<MessageInfo> MessageInfos { get; set; }
     }
 }

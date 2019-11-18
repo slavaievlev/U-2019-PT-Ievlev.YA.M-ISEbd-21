@@ -52,6 +52,7 @@
     <Compile Include="Implementer.cs" />
     <Compile Include="Material.cs" />
     <Compile Include="MaterialWork.cs" />
+    <Compile Include="MessageInfo.cs" />
     <Compile Include="Order.cs" />
     <Compile Include="OrderStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -17,5 +17,11 @@ namespace RepairWorkSoftwareDAL.ViewModel
         [DataMember]
         [DisplayName("ФИО Клиента")]
         public string CustomerFIO { get; set; }
+        
+        [DataMember]
+        public string Mail { get; set; }
+        
+        [DataMember]
+        public List<MessageInfoViewModel> Messages { get; set; }
     }
 }
