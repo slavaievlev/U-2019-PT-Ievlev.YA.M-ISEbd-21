@@ -189,5 +189,11 @@ namespace RepairWorkSoftwareView
             var form = new ImplementersForm();
             form.ShowDialog();
         }
+
+        private void письмаToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var form = new MailsForm();
+            form.ShowDialog();
+        }
     }
 }

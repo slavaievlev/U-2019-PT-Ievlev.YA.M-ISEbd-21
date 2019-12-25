@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.Entity;
 using System.Data.Entity.SqlServer;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using RepairWorkSoftwareDAL.BindingModel;
 using RepairWorkSoftwareDAL.Interface;
 using RepairWorkSoftwareDAL.ViewModel;
@@ -16,7 +19,7 @@ namespace ServiceImplementsDatabase.Implementations
 
         public MainServiceDB(AbstractDbContext context)
         {
-            this._context = context;
+            _context = context;
         }
         public List<OrderViewModel> GetList()
         {
@@ -36,7 +39,8 @@ namespace ServiceImplementsDatabase.Implementations
                 Count = rec.Count,
                 Sum = rec.Sum,
                 CustomerFIO = rec.Customer.CustomerFIO,
-                WorkName = rec.Work.WorkName
+                WorkName = rec.Work.WorkName,
+                ImplementerName = rec.Implementer.Fio
             })
                 .ToList();
             return result;
@@ -55,7 +59,7 @@ namespace ServiceImplementsDatabase.Implementations
 
         public void CreateOrder(OrderBindingModel model)
         {
-            _context.Orders.Add(new Order
+            var order = new Order
             {
                 CustomerId = model.CustomerId,
                 WorkId = model.WorkId,
@@ -63,17 +67,22 @@ namespace ServiceImplementsDatabase.Implementations
                 Count = model.Count,
                 Sum = model.Sum,
                 Status = OrderStatus.Принят
-            });
+            };
+            _context.Orders.Add(order);
             _context.SaveChanges();
+
+            var customer = _context.Customers.FirstOrDefault(x => x.Id == model.CustomerId);
+            SendEmail(customer.Mail, "Оповещение по заказам",
+                string.Format("Заказ №{0} от {1} создан успешно", order.Id, order.DateCreate.ToShortDateString()));
+            
         }
         public void TakeOrderInWork(OrderBindingModel model)
         {
             using (var transaction = _context.Database.BeginTransaction())
             {
+                Order element = _context.Orders.FirstOrDefault(rec => rec.Id == model.Id);
                 try
                 {
-                    Order element = _context.Orders.FirstOrDefault(rec => rec.Id ==
-                   model.Id);
                     if (element == null)
                     {
                         throw new Exception("Элемент не найден");
@@ -114,11 +123,21 @@ namespace ServiceImplementsDatabase.Implementations
                     element.DateImplement = DateTime.Now;
                     element.Status = OrderStatus.Выполняется;
                     _context.SaveChanges();
+                    
+                    SendEmail(element.Customer.Mail, "Оповещение по заказам",
+                        string.Format("Заказ №{0} от {1} передан в работу", element.Id, element.DateCreate.ToShortDateString()));
+                    
                     transaction.Commit();
                 }
                 catch (Exception)
                 {
                     transaction.Rollback();
+                    if (element != null)
+                    {
+                        element.Status = OrderStatus.НедостаточноРусурсов;
+                        _context.SaveChanges();
+                        transaction.Commit();
+                    }
                     throw;
                 }
             }
@@ -138,6 +157,9 @@ namespace ServiceImplementsDatabase.Implementations
 
             element.Status = OrderStatus.Готов;
             _context.SaveChanges();
+            
+            SendEmail(element.Customer.Mail, "Оповещение по заказам",
+                string.Format("Заказ №{0} от {1} передан на оплату", element.Id, element.DateCreate.ToShortDateString()));
         }
         public void PayOrder(OrderBindingModel model)
         {
@@ -152,6 +174,9 @@ namespace ServiceImplementsDatabase.Implementations
             }
             element.Status = OrderStatus.Оплачен;
             _context.SaveChanges();
+            
+            SendEmail(element.Customer.Mail, "Оповещение по заказам",
+                string.Format("Заказ №{0} от {1} оплачен успешно", element.Id, element.DateCreate.ToShortDateString()));
         }
         public void PutMaterialOnStock(StockMaterialBindingModel model)
         {
@@ -173,5 +198,38 @@ namespace ServiceImplementsDatabase.Implementations
             _context.SaveChanges();
         }
 
+        private void SendEmail(string mailAddress, string subject, string text)
+        {
+            MailMessage objMailMessage = new MailMessage();
+            SmtpClient objSmtpClient = null;
+
+            try
+            {
+                objMailMessage.From = new MailAddress(ConfigurationManager.AppSettings["MailLogin"]);
+                objMailMessage.To.Add(new MailAddress(mailAddress));
+                objMailMessage.Subject = subject;
+                objMailMessage.Body = text;
+                objMailMessage.SubjectEncoding = System.Text.Encoding.UTF8;
+                objMailMessage.BodyEncoding = System.Text.Encoding.UTF8;
+
+                objSmtpClient = new SmtpClient("smtp.gmail.com", 587);
+                objSmtpClient.UseDefaultCredentials = false;
+                objSmtpClient.EnableSsl = true;
+                objSmtpClient.DeliveryMethod = SmtpDeliveryMethod.Network;
+                objSmtpClient.Credentials = new NetworkCredential(
+                    ConfigurationManager.AppSettings["MailLogin"],
+                    ConfigurationManager.AppSettings["MailPassword"]);
+                objSmtpClient.Send(objMailMessage);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+            finally
+            {
+                objMailMessage = null;
+                objSmtpClient = null;
+            }
+        }
     }
 }

@@ -8,7 +8,7 @@ namespace RepairWorkSoftwareDAL.Interface
     {
         List<MessageInfoViewModel> GetList();
 
-        MessageInfoViewModel GetElement();
+        MessageInfoViewModel GetElement(int id);
 
         void AddElement(MessageInfoBindingModel model);
     }

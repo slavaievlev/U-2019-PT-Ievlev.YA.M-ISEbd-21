@@ -15,7 +15,7 @@ namespace RepairWorkSoftwareView
 
         private void ButtonCustomerAdd_Click(object sender, EventArgs e)
         {
-            var form = new CustomerEditForm();
+            var form = new NewCustomerEditForm();
             if (form.ShowDialog() == DialogResult.OK)
             {
                 LoadData();
@@ -26,8 +26,8 @@ namespace RepairWorkSoftwareView
         {
             if (dataGridView.SelectedRows.Count == 1)
             {
-                var form = new CustomerEditForm();
-                form.Id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
+                int id = Convert.ToInt32(dataGridView.SelectedRows[0].Cells[0].Value);
+                var form = new NewCustomerEditForm(id);
                 if (form.ShowDialog() == DialogResult.OK)
                 {
                     LoadData();

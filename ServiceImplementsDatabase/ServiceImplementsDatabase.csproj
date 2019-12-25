@@ -83,6 +83,7 @@
     <Compile Include="Implementations\ImplementerServiceDB.cs" />
     <Compile Include="Implementations\MainServiceDB.cs" />
     <Compile Include="Implementations\MaterialServiceDB.cs" />
+    <Compile Include="Implementations\MessageInfoServiceDB.cs" />
     <Compile Include="Implementations\ReportServiceDB.cs" />
     <Compile Include="Implementations\StockServiceDB.cs" />
     <Compile Include="Implementations\WorkServiceDB.cs" />

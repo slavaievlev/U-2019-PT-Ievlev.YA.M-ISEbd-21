@@ -35,24 +35,27 @@
             this.buttonCustomerDelete = new System.Windows.Forms.Button();
             this.buttonCustomerUpdate = new System.Windows.Forms.Button();
             this.customerServiceListBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.customerServiceListBindingSource)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.dataGridView)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.customerServiceListBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
             // dataGridView
             // 
-            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView.Location = new System.Drawing.Point(12, 12);
+            this.dataGridView.ColumnHeadersHeightSizeMode =
+                System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView.Location = new System.Drawing.Point(12, 15);
+            this.dataGridView.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.RowTemplate.Height = 24;
-            this.dataGridView.Size = new System.Drawing.Size(576, 426);
+            this.dataGridView.Size = new System.Drawing.Size(576, 532);
             this.dataGridView.TabIndex = 0;
             // 
             // buttonCustomerAdd
             // 
-            this.buttonCustomerAdd.Location = new System.Drawing.Point(630, 36);
+            this.buttonCustomerAdd.Location = new System.Drawing.Point(630, 45);
+            this.buttonCustomerAdd.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.buttonCustomerAdd.Name = "buttonCustomerAdd";
-            this.buttonCustomerAdd.Size = new System.Drawing.Size(131, 43);
+            this.buttonCustomerAdd.Size = new System.Drawing.Size(131, 54);
             this.buttonCustomerAdd.TabIndex = 1;
             this.buttonCustomerAdd.Text = "Добавить";
             this.buttonCustomerAdd.UseVisualStyleBackColor = true;
@@ -60,9 +63,10 @@
             // 
             // buttonCustomerEdit
             // 
-            this.buttonCustomerEdit.Location = new System.Drawing.Point(630, 85);
+            this.buttonCustomerEdit.Location = new System.Drawing.Point(630, 106);
+            this.buttonCustomerEdit.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.buttonCustomerEdit.Name = "buttonCustomerEdit";
-            this.buttonCustomerEdit.Size = new System.Drawing.Size(131, 43);
+            this.buttonCustomerEdit.Size = new System.Drawing.Size(131, 54);
             this.buttonCustomerEdit.TabIndex = 2;
             this.buttonCustomerEdit.Text = "Изменить";
             this.buttonCustomerEdit.UseVisualStyleBackColor = true;
@@ -70,9 +74,10 @@
             // 
             // buttonCustomerDelete
             // 
-            this.buttonCustomerDelete.Location = new System.Drawing.Point(630, 134);
+            this.buttonCustomerDelete.Location = new System.Drawing.Point(630, 168);
+            this.buttonCustomerDelete.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.buttonCustomerDelete.Name = "buttonCustomerDelete";
-            this.buttonCustomerDelete.Size = new System.Drawing.Size(131, 43);
+            this.buttonCustomerDelete.Size = new System.Drawing.Size(131, 54);
             this.buttonCustomerDelete.TabIndex = 3;
             this.buttonCustomerDelete.Text = "Удалить";
             this.buttonCustomerDelete.UseVisualStyleBackColor = true;
@@ -80,9 +85,10 @@
             // 
             // buttonCustomerUpdate
             // 
-            this.buttonCustomerUpdate.Location = new System.Drawing.Point(630, 183);
+            this.buttonCustomerUpdate.Location = new System.Drawing.Point(630, 229);
+            this.buttonCustomerUpdate.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.buttonCustomerUpdate.Name = "buttonCustomerUpdate";
-            this.buttonCustomerUpdate.Size = new System.Drawing.Size(131, 43);
+            this.buttonCustomerUpdate.Size = new System.Drawing.Size(131, 54);
             this.buttonCustomerUpdate.TabIndex = 4;
             this.buttonCustomerUpdate.Text = "Обновить";
             this.buttonCustomerUpdate.UseVisualStyleBackColor = true;
@@ -90,25 +96,26 @@
             // 
             // customerServiceListBindingSource
             // 
-            this.customerServiceListBindingSource.DataSource = typeof(RepairWorkSoftwareServiceImplementList.CustomerServiceList);
+            this.customerServiceListBindingSource.DataSource =
+                typeof(RepairWorkSoftwareServiceImplementList.CustomerServiceList);
             // 
             // CustomersForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 20F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 562);
             this.Controls.Add(this.buttonCustomerUpdate);
             this.Controls.Add(this.buttonCustomerDelete);
             this.Controls.Add(this.buttonCustomerEdit);
             this.Controls.Add(this.buttonCustomerAdd);
             this.Controls.Add(this.dataGridView);
+            this.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             this.Name = "CustomersForm";
             this.Text = "Клиенты";
             this.Load += new System.EventHandler(this.CustomersForm_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.customerServiceListBindingSource)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.dataGridView)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.customerServiceListBindingSource)).EndInit();
             this.ResumeLayout(false);
-
         }
 
         #endregion

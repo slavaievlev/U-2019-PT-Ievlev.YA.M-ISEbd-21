@@ -12,70 +12,82 @@ namespace ServiceImplementsDatabase.Implementations
 {
     public class CustomerServiceDB : ICustomerService
     {
-        private AbstractDbContext context;
+        private readonly AbstractDbContext _context;
 
         public CustomerServiceDB(AbstractDbContext context)
         {
-            this.context = context;
+            this._context = context;
         }
         public List<CustomerViewModel> GetList()
         {
-            List<CustomerViewModel> result = context.Customers.Select(rec => new CustomerViewModel
+            List<CustomerViewModel> result = _context.Customers.Select(rec => new CustomerViewModel
             {
                 Id = rec.Id,
-                CustomerFIO = rec.CustomerFIO
+                CustomerFIO = rec.CustomerFIO,
+                Mail = rec.Mail
             })
             .ToList();
             return result;
         }
         public CustomerViewModel GetElement(int id)
         {
-            Customer element = context.Customers.FirstOrDefault(rec => rec.Id == id);
+            Customer element = _context.Customers.FirstOrDefault(rec => rec.Id == id);
             if (element != null)
             {
                 return new CustomerViewModel
                 {
                     Id = element.Id,
-                    CustomerFIO = element.CustomerFIO
+                    CustomerFIO = element.CustomerFIO,
+                    Mail = element.Mail,
+                    Messages = element.MessageInfos
+                        .Select(m => new MessageInfoViewModel
+                        {
+                            MessageId = m.MessageId,
+                            DateDelivery = m.DateDelivery,
+                            Subject = m.Subject,
+                            Body = m.Body
+                        }).ToList()
                 };
             }
             throw new Exception("Элемент не найден");
         }
         public void AddElement(CustomerBindingModel model)
         {
-            Customer element = context.Customers.FirstOrDefault(rec => rec.CustomerFIO == model.CustomerFIO);
+            Customer element = _context.Customers.FirstOrDefault(rec => rec.CustomerFIO == model.CustomerFIO);
             if (element != null)
             {
                 throw new Exception("Уже есть клиент с таким ФИО");
             }
-            context.Customers.Add(new Customer
+            _context.Customers.Add(new Customer
             {
-                CustomerFIO = model.CustomerFIO
+                CustomerFIO = model.CustomerFIO,
+                Mail = model.Mail
             });
-            context.SaveChanges();
+            _context.SaveChanges();
         }
         public void UpdElement(CustomerBindingModel model)
         {
-            Customer element = context.Customers.FirstOrDefault(rec => rec.CustomerFIO == model.CustomerFIO && rec.Id != model.Id);
+            Customer element = _context.Customers.FirstOrDefault(rec => rec.CustomerFIO == model.CustomerFIO && rec.Id != model.Id);
             if (element != null)
             {
                 throw new Exception("Уже есть клиент с таким ФИО");
             }
-            element = context.Customers.FirstOrDefault(rec => rec.Id == model.Id);
+            element = _context.Customers.FirstOrDefault(rec => rec.Id == model.Id);
             if (element == null)
             {
                 throw new Exception("Элемент не найден");
             }
             element.CustomerFIO = model.CustomerFIO;
-            context.SaveChanges();
+            element.Mail = model.Mail;
+            _context.SaveChanges();
         }
         public void DelElement(int id)
         {
-            Customer element = context.Customers.FirstOrDefault(rec => rec.Id == id);
+            Customer element = _context.Customers.FirstOrDefault(rec => rec.Id == id);
             if (element != null)
             {
-                context.Customers.Remove(element);
-                context.SaveChanges();
+                _context.Customers.Remove(element);
+                _context.SaveChanges();
             }
             else
             {

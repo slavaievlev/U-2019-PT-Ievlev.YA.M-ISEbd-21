@@ -140,6 +140,19 @@
     <Compile Include="ImplementersForm.Designer.cs">
       <DependentUpon>ImplementersForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="MailClient.cs" />
+    <Compile Include="MailsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MailsForm.Designer.cs">
+      <DependentUpon>MailsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NewCustomerEditForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewCustomerEditForm.Designer.cs">
+      <DependentUpon>NewCustomerEditForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SqlServerTypes\Loader.cs" />
     <Compile Include="StocksLoadForm.cs">
       <SubType>Form</SubType>
@@ -229,6 +242,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ImplementersForm.resx">
       <DependentUpon>ImplementersForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MailsForm.resx">
+      <DependentUpon>MailsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NewCustomerEditForm.resx">
+      <DependentUpon>NewCustomerEditForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Report.rdlc" />
     <EmbeddedResource Include="StocksLoadForm.resx">
