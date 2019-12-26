@@ -13,11 +13,8 @@ namespace RepairWorkSoftwareView
     public class MailClient
     {
         private static TcpClient _mailClient;
-
         private static SslStream _stream;
-
         private static StreamReader _reader;
-
         private static StreamWriter _writer;
 
         public static void Connect()
@@ -99,70 +96,56 @@ namespace RepairWorkSoftwareView
             string date = string.Empty;
             string coding = string.Empty;
 
-            int i = 0;
-
             while (true)
             {
-                try
+                response = _reader.ReadLine();
+                if (response == ".")
+                    break;
+                if (response.Length > 4)
                 {
-                    Console.WriteLine(i++);
-                    if (i == 60)
+                    if (response.StartsWith("From:"))
                     {
-                        Console.WriteLine("FUCK");
+                        from = response.Substring(6);
                     }
-                    response = _reader.ReadLine();
-                    if (response == ".")
-                        break;
-                    if (response.Length > 4)
+
+                    if (response.StartsWith("Date:"))
                     {
-                        if (response.StartsWith("From:"))
-                        {
-                            from = response.Substring(6);
-                        }
-
-                        if (response.StartsWith("Date:"))
-                        {
-                            date = response.Substring(6);
-                        }
-
-                        if (response.StartsWith("Message-ID: "))
-                        {
-                            messageId = response.Substring(12);
-                        }
-
-                        if (response.StartsWith("Subject:"))
-                        {
-                            orderSubjectMessage = GetSubject(ref response, ref coding);
-
-                            orderBodyMessage = GetBody(response, coding);
-                        }
-
-                        if (!string.IsNullOrEmpty(messageId)
-                            && !string.IsNullOrEmpty(from)
-                            && !string.IsNullOrEmpty(orderSubjectMessage)
-                            && !string.IsNullOrEmpty(date))
-                        {
-                            ApiClient.PostRequest<MessageInfoBindingModel, bool>("api/MessageInfo/AddElement",
-                                new MessageInfoBindingModel
-                                {
-                                    MessageId = messageId,
-                                    FromMailAddress = from,
-                                    DateDelivery = Convert.ToDateTime(date),
-                                    Subject = orderSubjectMessage,
-                                    Body = orderBodyMessage
-                                });
-
-                            messageId = string.Empty;
-                            from = string.Empty;
-                            date = string.Empty;
-                            orderSubjectMessage = string.Empty;
-                            orderBodyMessage = string.Empty;
-                        }
+                        date = response.Substring(6);
                     }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
+
+                    if (response.StartsWith("Message-ID: "))
+                    {
+                        messageId = response.Substring(12);
+                    }
+
+                    if (response.StartsWith("Subject:"))
+                    {
+                        orderSubjectMessage = GetSubject(ref response, ref coding);
+
+                        // orderBodyMessage = GetBody(response, coding);
+                    }
+
+                    if (!string.IsNullOrEmpty(messageId)
+                        && !string.IsNullOrEmpty(from)
+                        && !string.IsNullOrEmpty(orderSubjectMessage)
+                        && !string.IsNullOrEmpty(date))
+                    {
+                        ApiClient.PostRequest<MessageInfoBindingModel, bool>("api/MessageInfo/AddElement",
+                            new MessageInfoBindingModel
+                            {
+                                MessageId = messageId,
+                                FromMailAddress = from,
+                                DateDelivery = Convert.ToDateTime(date),
+                                Subject = orderSubjectMessage,
+                                Body = orderBodyMessage
+                            });
+
+                        messageId = string.Empty;
+                        from = string.Empty;
+                        date = string.Empty;
+                        orderSubjectMessage = string.Empty;
+                        orderBodyMessage = string.Empty;
+                    }
                 }
             }
         }
@@ -198,7 +181,9 @@ namespace RepairWorkSoftwareView
                 response = _reader.ReadLine();
             }
 
-            response = _reader.ReadLine();
+            // response = _reader.ReadLine();
+            char[] buffer = new char[20];
+            _reader.Read(buffer, 0, 20);
 
             StringBuilder bodyMessage = new StringBuilder();
             
