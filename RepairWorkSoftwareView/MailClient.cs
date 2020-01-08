@@ -131,7 +131,9 @@ namespace RepairWorkSoftwareView
                 {
                     if (response.StartsWith("From:"))
                     {
-                        from = response.Substring(6);
+                        // from = response.Substring(6);
+                        Match match = Regex.Match(response, @"<.*@.*>");
+                        from = Regex.Replace(match.Value, @"<|>", "");
                     }
 
                     if (response.StartsWith("Date:"))

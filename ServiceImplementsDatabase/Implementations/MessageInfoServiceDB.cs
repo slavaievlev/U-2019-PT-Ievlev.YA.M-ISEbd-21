@@ -72,8 +72,7 @@ namespace ServiceImplementsDatabase.Implementations
             };
 
             var mailAddress = Regex.Match(model.FromMailAddress,
-                @"(?("")(""[^""]+?""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))
-(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9]{2,17}))");
+                @"[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]+");
             if (mailAddress.Success)
             {
                 var customer = _context.Customers.FirstOrDefault(c => c.Mail == mailAddress.Value);

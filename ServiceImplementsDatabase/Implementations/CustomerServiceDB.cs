@@ -1,12 +1,10 @@
-﻿using RepairWorkSoftwareDAL.BindingModel;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using RepairWorkSoftwareDAL.BindingModel;
 using RepairWorkSoftwareDAL.Interface;
 using RepairWorkSoftwareDAL.ViewModel;
 using RepairWorkSoftwareModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ServiceImplementsDatabase.Implementations
 {
@@ -34,19 +32,22 @@ namespace ServiceImplementsDatabase.Implementations
             Customer element = _context.Customers.FirstOrDefault(rec => rec.Id == id);
             if (element != null)
             {
+                List<MessageInfoViewModel> messages = _context.MessageInfos.Where(r => r.CustomerId == element.Id)
+                    .Select(m => new MessageInfoViewModel
+                    {
+                        MessageId = m.MessageId,
+                        CustomerName = m.Customer.CustomerFIO,
+                        DateDelivery = m.DateDelivery,
+                        Subject = m.Subject,
+                        Body = m.Body
+                    }).ToList();
+                
                 return new CustomerViewModel
                 {
                     Id = element.Id,
                     CustomerFIO = element.CustomerFIO,
                     Mail = element.Mail,
-                    Messages = element.MessageInfos
-                        .Select(m => new MessageInfoViewModel
-                        {
-                            MessageId = m.MessageId,
-                            DateDelivery = m.DateDelivery,
-                            Subject = m.Subject,
-                            Body = m.Body
-                        }).ToList()
+                    Messages = messages
                 };
             }
             throw new Exception("Элемент не найден");
