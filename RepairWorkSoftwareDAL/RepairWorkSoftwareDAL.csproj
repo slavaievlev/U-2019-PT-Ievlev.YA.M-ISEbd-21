@@ -42,6 +42,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attribute\CustomInterfaceAttribute.cs" />
+    <Compile Include="Attribute\CustomMethodAttribute.cs" />
     <Compile Include="BindingModel\ImplementerBindingModel.cs" />
     <Compile Include="BindingModel\MessageInfoBindingModel.cs" />
     <Compile Include="BindingModel\ReposrtBindingModel.cs" />
@@ -73,6 +75,5 @@
     <Compile Include="ViewModel\StockViewModel.cs" />
     <Compile Include="ViewModel\WorkViewModel.cs" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

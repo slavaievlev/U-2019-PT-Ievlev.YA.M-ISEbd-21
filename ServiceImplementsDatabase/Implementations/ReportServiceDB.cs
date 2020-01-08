@@ -35,7 +35,7 @@ namespace ServiceImplementsDatabase.Implementations
             this.context = context;
         }
 
-        public List<CustomerOrdersViewModel> GetClientOrders(ReportBindingModel model)
+        public List<CustomerOrdersViewModel> GetCustomerOrders(ReportBindingModel model)
         {
             return context.Orders
                 .Include(rec => rec.Customer)
@@ -153,7 +153,7 @@ namespace ServiceImplementsDatabase.Implementations
             });
             
             // Заполняем таблицу
-            var list = GetClientOrders(model);
+            var list = GetCustomerOrders(model);
             var fontForCells = new Font(baseFont, 10);
             for (int i = 0; i < list.Count; i++)
             {
@@ -198,7 +198,7 @@ namespace ServiceImplementsDatabase.Implementations
             doc.Close();
         }
 
-        public void SaveProductPrice(ReportBindingModel model)
+        public void SaveWorkPrice(ReportBindingModel model)
         {
             if (File.Exists(model.FileName))
             {
@@ -219,7 +219,7 @@ namespace ServiceImplementsDatabase.Implementations
                 var range = paragraph.Range;
 
                 // Задаем текст
-                range.Text = "Прайс изделий";
+                range.Text = "Прайс работ";
 
                 // Задаем настройки шрифта
                 var font = range.Font;

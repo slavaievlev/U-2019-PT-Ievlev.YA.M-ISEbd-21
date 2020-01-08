@@ -29,7 +29,7 @@ namespace RepairWorkSoftwareRestAPI.Controllers
         [HttpPost]
         public IHttpActionResult GetCustomerOrders(ReportBindingModel model)
         {
-            var list = _service.GetClientOrders(model);
+            var list = _service.GetCustomerOrders(model);
             if (list == null)
             {
                 InternalServerError(new Exception("Нет данных"));
@@ -41,7 +41,7 @@ namespace RepairWorkSoftwareRestAPI.Controllers
         [HttpPost]
         public void SaveProductPrice(ReportBindingModel model)
         {
-            _service.SaveProductPrice(model);
+            _service.SaveWorkPrice(model);
         }
         
         [HttpPost]

@@ -66,5 +66,19 @@ using RepairWorkSoftwareDAL.Interface;
                 new WorkImplementer(_mainService, _implementerService, impl.Id, order.Id);
             }
         }
+
+        [HttpGet]
+        public IHttpActionResult GetInfo()
+        {
+            ReflectionService service = new ReflectionService();
+            
+            var list = service.GetInfoByAssembly();
+            if (list == null)
+            {
+                InternalServerError(new Exception("Нет данных"));
+            }
+
+            return Ok(list);
+        }
     }
 }

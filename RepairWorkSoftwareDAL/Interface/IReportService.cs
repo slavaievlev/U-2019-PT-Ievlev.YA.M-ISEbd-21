@@ -1,23 +1,26 @@
-﻿using RepairWorkSoftwareDAL.BindingModel;
+﻿using System.Collections.Generic;
+using RepairWorkSoftwareDAL.Attribute;
+using RepairWorkSoftwareDAL.BindingModel;
 using RepairWorkSoftwareDAL.ViewModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RepairWorkSoftwareDAL.Interface
 {
+    [CustomInterface("Интерфейс для работы с экспортом файлов")]
     public interface IReportService
     {
-        void SaveProductPrice(ReportBindingModel model);
+        [CustomMethod("Метод для вывода прайса по работам .docx")]
+        void SaveWorkPrice(ReportBindingModel model);
 
+        [CustomMethod("Метод для получения информации о загруженности складов")]
         List<StocksLoadViewModel> GetStocksLoad();
 
+        [CustomMethod("Метод для вывода информации о загруженности складов в .xlsx")]
         void SaveStocksLoad(ReportBindingModel model);
 
-        List<CustomerOrdersViewModel> GetClientOrders(ReportBindingModel model);
+        [CustomMethod("Метод для получения информации по заказам")]
+        List<CustomerOrdersViewModel> GetCustomerOrders(ReportBindingModel model);
 
+        [CustomMethod("Метод для вывода информации по заказам в .pdf")]
         void SaveCustomerOrders(ReportBindingModel model);
     }
 }
