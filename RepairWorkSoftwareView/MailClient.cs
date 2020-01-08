@@ -6,7 +6,9 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Web.Configuration;
 using System.Windows.Forms;
+using OpenPop.Pop3;
 using RepairWorkSoftwareDAL.BindingModel;
+using Message = OpenPop.Mime.Message;
 
 namespace RepairWorkSoftwareView
 {
@@ -17,6 +19,30 @@ namespace RepairWorkSoftwareView
         private static StreamReader _reader;
         private static StreamWriter _writer;
 
+        public static void ConnectWithOpenPopLibrary()
+        {
+            var popClient = new Pop3Client();
+            popClient.Connect("pop.gmail.com", 995, true);
+            popClient.Authenticate(WebConfigurationManager.AppSettings["MailLogin"],
+                WebConfigurationManager.AppSettings["MailPassword"]);
+
+            int messageCount = popClient.GetMessageCount();
+            for (int count = 1; count < messageCount; count++)
+            {
+                Message message = popClient.GetMessage(count);
+                Console.WriteLine(message.Headers);
+                // ApiClient.PostRequest<MessageInfoBindingModel, bool>("api/MessageInfo/AddElement",
+                //     new MessageInfoBindingModel
+                //     {
+                //         MessageId = Convert.ToString(count),
+                //         FromMailAddress = from,
+                //         DateDelivery = Convert.ToDateTime(date),
+                //         Subject = orderSubjectMessage,
+                //         Body = orderBodyMessage
+                //     });
+            }
+        }
+        
         public static void Connect()
         {
             string response = null;
@@ -122,7 +148,7 @@ namespace RepairWorkSoftwareView
                     {
                         orderSubjectMessage = GetSubject(ref response, ref coding);
 
-                        // orderBodyMessage = GetBody(response, coding);
+                        orderBodyMessage = GetBody(response, coding);
                     }
 
                     if (!string.IsNullOrEmpty(messageId)
@@ -181,10 +207,7 @@ namespace RepairWorkSoftwareView
                 response = _reader.ReadLine();
             }
 
-            // response = _reader.ReadLine();
-            char[] buffer = new char[20];
-            _reader.Read(buffer, 0, 20);
-
+            response = _reader.ReadLine();
             StringBuilder bodyMessage = new StringBuilder();
             
             bool needEncoding = false;
@@ -203,7 +226,8 @@ namespace RepairWorkSoftwareView
             if (needEncoding)
             {
                 byte[] b = Convert.FromBase64String(bodyMessage.ToString());
-                return Encoding.GetEncoding(coding).GetString(b);
+                return Encoding.UTF8.GetString(b);
+                // return Encoding.GetEncoding(coding).GetString(b);
             }
             else
             {

@@ -1,9 +1,9 @@
-namespace ServiceImplementsDatabase.Migrations
+﻿namespace ServiceImplementsDatabase.Migrations
 {
     using System;
     using System.Data.Entity.Migrations;
     
-    public partial class Version_Name : DbMigration
+    public partial class lab7 : DbMigration
     {
         public override void Up()
         {
@@ -13,8 +13,25 @@ namespace ServiceImplementsDatabase.Migrations
                     {
                         Id = c.Int(nullable: false, identity: true),
                         CustomerFIO = c.String(),
+                        Mail = c.String(),
                     })
                 .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.MessageInfos",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        MessageId = c.String(),
+                        FromMailAddress = c.String(),
+                        Subject = c.String(),
+                        Body = c.String(),
+                        DateDelivery = c.DateTime(nullable: false),
+                        CustomerId = c.Int(),
+                    })
+                .PrimaryKey(t => t.Id)
+                .ForeignKey("dbo.Customers", t => t.CustomerId)
+                .Index(t => t.CustomerId);
             
             CreateTable(
                 "dbo.Orders",
@@ -28,12 +45,24 @@ namespace ServiceImplementsDatabase.Migrations
                         Status = c.Int(nullable: false),
                         DateCreate = c.DateTime(nullable: false),
                         DateImplement = c.DateTime(),
+                        ImplementerId = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Customers", t => t.CustomerId, cascadeDelete: true)
+                .ForeignKey("dbo.Implementers", t => t.ImplementerId)
                 .ForeignKey("dbo.Works", t => t.WorkId, cascadeDelete: true)
                 .Index(t => t.CustomerId)
-                .Index(t => t.WorkId);
+                .Index(t => t.WorkId)
+                .Index(t => t.ImplementerId);
+            
+            CreateTable(
+                "dbo.Implementers",
+                c => new
+                    {
+                        Id = c.Int(nullable: false, identity: true),
+                        Fio = c.String(nullable: false),
+                    })
+                .PrimaryKey(t => t.Id);
             
             CreateTable(
                 "dbo.Works",
@@ -102,19 +131,25 @@ namespace ServiceImplementsDatabase.Migrations
             DropForeignKey("dbo.StockMaterials", "StockId", "dbo.Stocks");
             DropForeignKey("dbo.StockMaterials", "MaterialId", "dbo.Materials");
             DropForeignKey("dbo.Orders", "WorkId", "dbo.Works");
+            DropForeignKey("dbo.Orders", "ImplementerId", "dbo.Implementers");
             DropForeignKey("dbo.Orders", "CustomerId", "dbo.Customers");
+            DropForeignKey("dbo.MessageInfos", "CustomerId", "dbo.Customers");
             DropIndex("dbo.StockMaterials", new[] { "MaterialId" });
             DropIndex("dbo.StockMaterials", new[] { "StockId" });
             DropIndex("dbo.MaterialWorks", new[] { "WorkId" });
             DropIndex("dbo.MaterialWorks", new[] { "MaterialId" });
+            DropIndex("dbo.Orders", new[] { "ImplementerId" });
             DropIndex("dbo.Orders", new[] { "WorkId" });
             DropIndex("dbo.Orders", new[] { "CustomerId" });
+            DropIndex("dbo.MessageInfos", new[] { "CustomerId" });
             DropTable("dbo.Stocks");
             DropTable("dbo.StockMaterials");
             DropTable("dbo.Materials");
             DropTable("dbo.MaterialWorks");
             DropTable("dbo.Works");
+            DropTable("dbo.Implementers");
             DropTable("dbo.Orders");
+            DropTable("dbo.MessageInfos");
             DropTable("dbo.Customers");
         }
     }

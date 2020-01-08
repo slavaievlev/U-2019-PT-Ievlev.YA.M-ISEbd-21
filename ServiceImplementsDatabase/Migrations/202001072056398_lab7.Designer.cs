@@ -13,7 +13,7 @@ namespace ServiceImplementsDatabase.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201911182225231_lab7"; }
+            get { return "202001072056398_lab7"; }
         }
         
         string IMigrationMetadata.Source

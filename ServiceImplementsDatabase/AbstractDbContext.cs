@@ -39,5 +39,10 @@ namespace ServiceImplementsDatabase
         public virtual DbSet<Implementer> Implementers { get; set; }
         
         public virtual DbSet<MessageInfo> MessageInfos { get; set; }
+        
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<MessageInfo>().ToTable("MessageInfos");    // by default has generate MessageInfoes
+        }
     }
 }

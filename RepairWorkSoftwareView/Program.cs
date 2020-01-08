@@ -1,15 +1,5 @@
-﻿using RepairWorkSoftwareDAL.Interface;
-using RepairWorkSoftwareServiceImplementList;
-using ServiceImplementsDatabase;
-using ServiceImplementsDatabase.Implementations;
-using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System;
 using System.Windows.Forms;
-using Unity;
-using Unity.Lifetime;
 
 namespace RepairWorkSoftwareView
 {
