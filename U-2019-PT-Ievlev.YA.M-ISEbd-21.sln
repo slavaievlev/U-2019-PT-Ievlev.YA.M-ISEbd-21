@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepairWorkSoftwareServiceIm
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepairWorkSoftwareView", "RepairWorkSoftwareView\RepairWorkSoftwareView.csproj", "{6DA73C82-612A-48D6-BC30-237BF50E23C3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceImplementsDatabase", "ServiceImplementsDatabase\ServiceImplementsDatabase.csproj", "{DC5CB7AE-5DB5-43D7-AD1D-94DA90A5180C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{6DA73C82-612A-48D6-BC30-237BF50E23C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DA73C82-612A-48D6-BC30-237BF50E23C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6DA73C82-612A-48D6-BC30-237BF50E23C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC5CB7AE-5DB5-43D7-AD1D-94DA90A5180C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC5CB7AE-5DB5-43D7-AD1D-94DA90A5180C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC5CB7AE-5DB5-43D7-AD1D-94DA90A5180C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC5CB7AE-5DB5-43D7-AD1D-94DA90A5180C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -25,7 +25,7 @@ namespace RepairWorkSoftwareView
 
         private int? id;
 
-        private List<MaterialWorkViewModel> workMaterials;
+        private List<WorkMaterialViewModel> workMaterials;
 
         public WorkEditForm(IWorkService service)
         {
@@ -55,7 +55,7 @@ namespace RepairWorkSoftwareView
             }
             else
             {
-                workMaterials = new List<MaterialWorkViewModel>();
+                workMaterials = new List<WorkMaterialViewModel>();
             }
         }
 
@@ -156,10 +156,10 @@ namespace RepairWorkSoftwareView
 
             try
             {
-                List<MaterialWorkBindingModel> workMaterialBM = new List<MaterialWorkBindingModel>();
+                List<WorkMaterialBindingModel> workMaterialBM = new List<WorkMaterialBindingModel>();
                 for (int i = 0; i < workMaterials.Count; i++)
                 {
-                    workMaterialBM.Add(new MaterialWorkBindingModel
+                    workMaterialBM.Add(new WorkMaterialBindingModel
                     {
                         Id = workMaterials[i].Id,
                         WorkId = workMaterials[i].WorkId,

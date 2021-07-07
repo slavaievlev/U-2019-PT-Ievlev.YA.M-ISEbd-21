@@ -15,5 +15,9 @@ namespace RepairWorkSoftwareModel
         public int WorkId { get; set; }
 
         public int Count { get; set; }
+
+        public virtual Material Material { get; set; }
+
+        public virtual Work Work { get; set; }
     }
 }

@@ -18,11 +18,11 @@ namespace RepairWorkSoftwareView
         [Dependency]
         public new IUnityContainer Container { get; set; }
 
-        public MaterialWorkViewModel Model { set { model = value; } get { return model; } }
+        public WorkMaterialViewModel Model { set { model = value; } get { return model; } }
 
         private readonly IMaterialService service;
 
-        private MaterialWorkViewModel model;
+        private WorkMaterialViewModel model;
 
         public WorkMaterialAddForm(IMaterialService service)
         {
@@ -74,7 +74,7 @@ namespace RepairWorkSoftwareView
             {
                 if (model == null)
                 {
-                    model = new MaterialWorkViewModel
+                    model = new WorkMaterialViewModel
                     {
                         MaterialId = Convert.ToInt32(comboBoxMaterial.SelectedValue),
                         MaterialName = comboBoxMaterial.Text,

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RepairWorkSoftwareDAL.BindingModel
 {
-    public class MaterialWorkBindingModel
+    public class WorkMaterialBindingModel
     {
         public int Id { get; set; }
 
